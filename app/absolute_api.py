@@ -40,4 +40,7 @@ class Abs_Actions:
         # Make the actual request
         request_url = "https://api.absolute.com/jws/validate"
         r = requests.post(request_url, signed, {"content-type": "text/plain"})
-        print(r.content)
+        r_json = r.json()
+        #print(r.content)
+        print(r_json["data"][0]["deviceName"])
+    

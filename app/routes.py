@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from werkzeug.urls import url_parse
-from app.forms import LoginForm
+from app.forms import LoginForm, RequestForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Log_Entry
 
 
 @app.route('/')
@@ -44,3 +44,12 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/requests', methods=['GET', 'POST'])
+@login_required
+def requests():
+    form = RequestForm()
+    if form.validate_on_submit():
+        flash(f'You search {form.keyword.data} as a {form.types.data}.')
+
+    return render_template('requests.html', title='Requests', form=form)
+    
