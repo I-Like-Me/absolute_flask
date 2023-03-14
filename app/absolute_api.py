@@ -42,5 +42,7 @@ class Abs_Actions:
         r = requests.post(request_url, signed, {"content-type": "text/plain"})
         r_json = r.json()
         #print(r.content)
-        print(r_json["data"][0]["deviceName"])
+        #device_name = r_json["data"][0]["deviceName"]
+        #user_name = r_json["data"][0]["userName"]
+        return r_json
     

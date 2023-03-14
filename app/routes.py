@@ -4,6 +4,7 @@ from werkzeug.urls import url_parse
 from app.forms import LoginForm, RequestForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Log_Entry
+from app.absolute_api import Abs_Actions
 
 
 @app.route('/')
@@ -49,7 +50,15 @@ def logout():
 def requests():
     form = RequestForm()
     if form.validate_on_submit():
-        flash(f'You search {form.keyword.data} as a {form.types.data}.')
-
-    return render_template('requests.html', title='Requests', form=form)
+        results = Abs_Actions.Abs_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
+        if results['data'] == []: 
+            flash('Try different keyword.')
+            return redirect(url_for('requests'))
+        flash(f'{results["data"][0][f"{form.types.data}"]}')
+        flash(f'{results}')
+        #'username'
+        #'systemModel'
+        #'serialNumber'
+        #flash(f'You search {form.keyword.data} as a {form.types.data}.')
+    return render_template('requests.html', title='Requests', form=form, results=results)
     
