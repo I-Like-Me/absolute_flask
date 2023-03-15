@@ -16,7 +16,7 @@ class Abs_Actions:
             "method": "GET",
             "contentType": "application/json",
             "uri": "/v3/reporting/devices",
-            "queryString": f"pageSize=1&{keyword_type_choice}={keyword_choice}",
+            "queryString": f"{keyword_type_choice}={keyword_choice}",
             "payload": {}
         }
         request_payload_data = {
@@ -44,5 +44,7 @@ class Abs_Actions:
         #print(r.content)
         #device_name = r_json["data"][0]["deviceName"]
         #user_name = r_json["data"][0]["userName"]
+        #if r_json['data'] == []:
+            #print('True')
         return r_json
-    
+        #print(r_json['data'])

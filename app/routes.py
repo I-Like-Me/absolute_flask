@@ -49,13 +49,15 @@ def logout():
 @login_required
 def requests():
     form = RequestForm()
+    results = None
     if form.validate_on_submit():
+        if form.types.data == 'username':
+            form.keyword.data = "AD%5C" + form.keyword.data
         results = Abs_Actions.Abs_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
         if results['data'] == []: 
             flash('Try different keyword.')
             return redirect(url_for('requests'))
-        flash(f'{results["data"][0][f"{form.types.data}"]}')
-        flash(f'{results}')
+        flash('fun')
         #'username'
         #'systemModel'
         #'serialNumber'
