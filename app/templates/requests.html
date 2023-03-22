@@ -21,4 +21,13 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+
+    <hr>
+    {% if form.types.data == "deviceName" or form.types.data == "serialNumber" %}
+        {% include '_machine_results.html' %}
+    {% endif %}
+    {% if form.types.data == "username" %}
+        {% include '_user_results.html' %}
+    {% endif %}    
+
 {% endblock %}

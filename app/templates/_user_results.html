@@ -1,0 +1,3 @@
+{% for machine in results["data"] %}
+    <p><b>{{ machine["deviceName"] }}</b> </br> - Serial Number: {{ machine["serialNumber"] }}</br></p>
+{% endfor %}
