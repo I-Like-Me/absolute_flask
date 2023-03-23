@@ -41,12 +41,9 @@ def login():
         except DuoException:
             traceback.print_exc()
             if Config.duo_failmode.upper() == "OPEN":
-                return render_template("login.html",
-                                   message="Login 'Successful', but 2FA Not Performed. Confirm Duo client/secret/host values are correct")
+                return render_template("login.html", message="Login 'Successful', but 2FA Not Performed.")
             else:
-                return render_template("login.html",
-                                   message="2FA Unavailable. Confirm Duo client/secret/host values are correct")
-
+                return render_template("login.html", message="2FA Unavailable.")
 
         state = duo_client.generate_state()
         session['state'] = state
@@ -56,13 +53,10 @@ def login():
         return redirect(prompt_uri)
     return render_template('login.html', title='Sign In', form=form)
 
-
 @app.route("/duo-callback", methods=['GET', 'POST'])
 def duo_callback():
     state = request.args.get('state')
-    code = request.args.get('duo_code')
     form = LoginForm()
-
     if 'state' in session and 'username' in session:
         saved_state = session['state']
         username = session['username']
@@ -72,16 +66,12 @@ def duo_callback():
     if state != saved_state:
         return render_template("login.html", message="Duo state does not match saved state", title='Login', form=form)
 
-    decoded_token = duo_client.exchange_authorization_code_for_2fa_result(code, username)
     user = User.query.filter_by(username=username).first()
     login_user(user)
     next_page = request.args.get('next')
     if not next_page or url_parse(next_page).netloc != '':
         next_page = url_for('index')
-    message=json.dumps(decoded_token)
     return redirect(next_page)
-    #return render_template('index.html', message=json.dumps(decoded_token, indent=2, sort_keys=True))
-    #return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
@@ -92,11 +82,13 @@ def logout():
 @login_required
 def requests():
     form = RequestForm()
+    raw_keyword = form.keyword.data
     results = None
     if form.validate_on_submit():
         if form.types.data == 'username':
             form.keyword.data = "AD%5C" + form.keyword.data
         results = Abs_Actions.Abs_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
+        form.keyword.data = raw_keyword
         if results['data'] == []: 
             flash('Try different keyword.')
             return redirect(url_for('requests'))
