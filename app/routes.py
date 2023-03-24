@@ -3,11 +3,11 @@ from app import app, db, Config
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RequestForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Log_Entry
+from app.models import User, Log_Entry, Request
 from app.absolute_api import Abs_Actions
 from duo_universal.client import Client, DuoException
+from flask_paginate import Pagination, get_page_parameter
 import traceback
-import json
 
 duo_client = Client(Config.client_id, Config.client_secret, Config.api_host, Config.redirect_uri)
 
@@ -31,25 +31,21 @@ def index():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    
     form = LoginForm()
     if form.validate_on_submit():
         username = request.form.get('username')
-
         try:
             duo_client.health_check()
         except DuoException:
             traceback.print_exc()
             if Config.duo_failmode.upper() == "OPEN":
-                return render_template("login.html", message="Login 'Successful', but 2FA Not Performed.")
+                return render_template("login.html", message="Login 'Successful', 2FA Not Performed.")
             else:
                 return render_template("login.html", message="2FA Unavailable.")
-
         state = duo_client.generate_state()
         session['state'] = state
         session['username'] = username
         prompt_uri = duo_client.create_auth_url(username, state)
- 
         return redirect(prompt_uri)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -61,11 +57,9 @@ def duo_callback():
         saved_state = session['state']
         username = session['username']
     else:
-        return render_template("login.html", message="No saved state please login again", title='Login', form=form)
-    
+        return render_template("login.html", message="No saved state", title='Login', form=form)
     if state != saved_state:
-        return render_template("login.html", message="Duo state does not match saved state", title='Login', form=form)
-
+        return render_template("login.html", message="Duo state != saved state", title='Login', form=form)
     user = User.query.filter_by(username=username).first()
     login_user(user)
     next_page = request.args.get('next')
@@ -92,5 +86,18 @@ def requests():
         if results['data'] == []: 
             flash('Try different keyword.')
             return redirect(url_for('requests'))
-    return render_template('requests.html', title='Requests', form=form, results=results)
-    
+        for machine in results["data"]:
+            device = Request(deviceName=machine["deviceName"],
+                             username=machine["username"],
+                             serialNumber=machine["serialNumber"],
+                             localIp=machine["localIp"],
+                             systemModel=machine["systemModel"],
+                             systemManufacturer=machine["systemManufacturer"],
+                             caller=current_user
+                             )
+            db.session.add(device)
+            db.session.commit()
+    my_requests = current_user.get_my_requests()
+    #page = request.args.get('page', 1, type=int)
+    #results = results.pageinate(page=page, per_page=app.config['RESULTS_PER_PAGE'], error_out=False)
+    return render_template('requests.html', title='Requests', form=form, my_requests=my_requests)
