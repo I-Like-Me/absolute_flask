@@ -35,6 +35,7 @@ class Request(db.Model):
     localIp = db.Column(db.String(140))
     systemModel = db.Column(db.String(140))
     systemManufacturer = db.Column(db.String(140))
+    keyTypeUsed = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

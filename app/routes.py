@@ -69,6 +69,10 @@ def duo_callback():
 
 @app.route('/logout')
 def logout():
+    my_requests = current_user.get_my_requests()
+    for request in my_requests:
+        db.session.delete(request)
+    db.session.commit()
     logout_user()
     return redirect(url_for('index'))
 
@@ -77,8 +81,11 @@ def logout():
 def requests():
     form = RequestForm()
     raw_keyword = form.keyword.data
-    results = None
     if form.validate_on_submit():
+        my_requests = current_user.get_my_requests()
+        for my_request in my_requests:
+            db.session.delete(my_request)
+        db.session.commit()
         if form.types.data == 'username':
             form.keyword.data = "AD%5C" + form.keyword.data
         results = Abs_Actions.Abs_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
@@ -93,11 +100,15 @@ def requests():
                              localIp=machine["localIp"],
                              systemModel=machine["systemModel"],
                              systemManufacturer=machine["systemManufacturer"],
+                             keyTypeUsed=form.types.data,
                              caller=current_user
                              )
             db.session.add(device)
             db.session.commit()
-    my_requests = current_user.get_my_requests()
-    #page = request.args.get('page', 1, type=int)
-    #results = results.pageinate(page=page, per_page=app.config['RESULTS_PER_PAGE'], error_out=False)
-    return render_template('requests.html', title='Requests', form=form, my_requests=my_requests)
+    page = request.args.get('page', 1, type=int)
+    my_requests = current_user.get_my_requests().paginate(page=page, per_page=app.config['RESULTS_PER_PAGE'], error_out=False)
+    next_url = url_for('requests', page=my_requests.next_num) \
+        if my_requests.has_next else None
+    prev_url = url_for('requests', page=my_requests.prev_num) \
+        if my_requests.has_prev else None
+    return render_template('requests.html', title='Requests', form=form, my_requests=my_requests.items, next_url=next_url, prev_url=prev_url)

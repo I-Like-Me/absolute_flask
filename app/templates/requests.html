@@ -23,11 +23,18 @@
     </form>
 
     <hr>
-    {% if form.types.data == "deviceName" or form.types.data == "serialNumber" %}
-        {% include '_machine_results.html' %}
+    {% for request in my_requests %}
+        {% if request.keyTypeUsed == "deviceName" or form.types.data == "serialNumber" %}
+            {% include '_machine_results.html' %}
+        {% endif %}
+        {% if request.keyTypeUsed == "username" %}
+            {% include '_user_results.html' %}
+        {% endif %} 
+    {% endfor %}
+    {% if prev_url %}
+    <a href="{{ prev_url }}">Newer machines</a>
     {% endif %}
-    {% if form.types.data == "username" %}
-        {% include '_user_results.html' %}
-    {% endif %}    
-
+    {% if next_url %}
+    <a href="{{ next_url }}">Older machines</a>
+    {% endif %}
 {% endblock %}
