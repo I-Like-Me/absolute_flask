@@ -105,6 +105,7 @@ def requests():
                              )
             db.session.add(device)
             db.session.commit()
+        return redirect(url_for('requests'))
     page = request.args.get('page', 1, type=int)
     my_requests = current_user.get_my_requests().paginate(page=page, per_page=app.config['RESULTS_PER_PAGE'], error_out=False)
     next_url = url_for('requests', page=my_requests.next_num) \
