@@ -1,8 +1,13 @@
-<table>
+<table class="table table-hover" >
     <tr valign="top">
-        <td>
-                {{ request.deviceName }}
-            </a>
+        <td width="70px">
+            <h3><b>{{ request.deviceName }}</b></h3>
+        </td>
+        <td width="70px" align="right">
+            {{ request.systemManufacturer }} <b>:Manufacturer-</b> <br>
+            {{ request.systemModel }} <b>:Model-</b> <br>
+            {{ request.localIp }} <b>:IP Address-</b> <br>
+            {{ request.serialNumber }} <b>:Serial Number-</b>
         </td>
     </tr>
 </table>

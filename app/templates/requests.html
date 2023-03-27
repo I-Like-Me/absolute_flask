@@ -1,27 +1,13 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
+{% block app_content %}
     <h1>Search</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.keyword.label }}<br>
-            {{ form.keyword(size=32) }}<br>
-            {% for error in form.keyword.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {% for type in form.types %}
-                <tr>
-                    <td>{{ type }}</td>
-                    <td>{{ type.label }}</td>
-                </tr>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
-
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
     <hr>
     {% for request in my_requests %}
         {% if request.keyTypeUsed == "deviceName" or form.types.data == "serialNumber" %}
@@ -31,10 +17,20 @@
             {% include '_user_results.html' %}
         {% endif %} 
     {% endfor %}
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Newer machines</a>
-    {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Older machines</a>
-    {% endif %}
+    <hr>
+    <hr>
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Prev Batch
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Next Batch <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}

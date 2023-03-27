@@ -113,3 +113,10 @@ def requests():
     prev_url = url_for('requests', page=my_requests.prev_num) \
         if my_requests.has_prev else None
     return render_template('requests.html', title='Requests', form=form, my_requests=my_requests.items, next_url=next_url, prev_url=prev_url)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+
+    return render_template('user.html', user=user)
