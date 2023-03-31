@@ -1,13 +1,15 @@
-<table class="table table-hover" >
-    <tr valign="top">
-        <td width="70px">
-            <h3><b>{{ request.deviceName }}</b></h3>
-        </td>
-        <td width="70px" align="right">
-            {{ request.systemManufacturer }} <b>:Manufacturer-</b> <br>
-            {{ request.systemModel }} <b>:Model-</b> <br>
-            {{ request.localIp }} <b>:IP Address-</b> <br>
-            {{ request.serialNumber }} <b>:Serial Number-</b>
-        </td>
-    </tr>
-</table>
+
+
+<div class="container">
+        <button type="button" class="btn btn-default btn-block">
+            <div class="col-sm-4">
+                <h3><b>{{ request.deviceName }}</b></h3>
+            </div>
+            <div class="col-sm-8 text-right">
+                {{ request.systemManufacturer }} <b>:Manufacturer-</b> <br>
+                {{ request.systemModel }} <b>:Model-</b> <br>
+                {{ request.localIp }} <b>:IP Address-</b> <br>
+                {{ request.serialNumber }} <b>:Serial Number-</b>
+            </div>
+        </button>
+</div>

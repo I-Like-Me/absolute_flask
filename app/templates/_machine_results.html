@@ -1,12 +1,34 @@
-<table>
-    <tr valign="top">
-        <td>
-                <h3><b>{{ request.deviceName }}</b></h3>
-                    <b>-Manufacturer:</b> {{ request.systemManufacturer }} <br>
-                    <b>-Model:</b> {{ request.systemModel }} <br>
-                    <b>-IP Address:</b> {{ request.localIp }} <br>
-                    <b>{{ request.serialNumber }} <b>:Serial Number-</b>
-            </a>
-        </td>
-    </tr>
-</table>
+<div class="machine name text-center">
+    <h3><b>{{ request.deviceName }}</b></h3><br>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <p><b>-Manufacturer:</b> {{ request.systemManufacturer }}</p>
+            <p><b>-Model:</b> {{ request.systemModel }}</p>
+            <p><b>-Serial Number:</b> {{ request.serialNumber }}</p>
+            <p><b>-IP Address:</b>{{ request.localIp }}</p>
+            <p><b>-MAC Address:</b></p>
+            <p><b>-Last Connected:</b></p>
+        </div>
+        <div class="col-md-4">
+            <p><b>-Recent Users:</b></p>
+            <p><b>-OS Product Level:</b></p>
+            <p><b>-Free Space:</b></p>
+            <p><b>-Citrix Version:</b></p>
+            <p><b>-Cortex:</b></p>
+            <p><b>-InsightVM:</b></p>
+        </div>
+        <div class="col-md-4">
+            <p><b>-Bitlocker Status:</b></p>
+            <br>
+            <br>
+            <br>
+            <p><b>-Member Of:</b></p>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
