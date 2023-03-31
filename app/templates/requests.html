@@ -10,7 +10,7 @@
     </div>
     <hr>
     {% for request in my_requests %}
-        {% if request.keyTypeUsed == "deviceName" or form.types.data == "serialNumber" %}
+        {% if request.keyTypeUsed == "deviceName" or request.keyTypeUsed == "serialNumber" %}
             {% include '_machine_results.html' %}
         {% endif %}
         {% if request.keyTypeUsed == "username" %}
