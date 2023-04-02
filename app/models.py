@@ -35,14 +35,21 @@ class Request(db.Model):
     localIp = db.Column(db.String(140))
     systemModel = db.Column(db.String(140))
     systemManufacturer = db.Column(db.String(140))
+    macAddress = db.Column(db.String(140))
+    cortex = db.Column(db.String(140))
+    insightVM = db.Column(db.String(140))
+    lastConnected = db.Column(db.String(140))
+    freeSpace = db.Column(db.String(140))
+    citrixVersion = db.Column(db.String(140))
+    bitLockKey = db.Column(db.String(140))
+    osLevel = db.Column(db.String(140))
     keyTypeUsed = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+ 
 
     def __repr__(self):
         return f'<Request {self.deviceName}>'
-    
-
     
 
 
