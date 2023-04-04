@@ -9,27 +9,13 @@
         </div>
     </div>
     <hr>
-    {% for request in my_requests %}
-        {% if request.keyTypeUsed == "deviceName" or request.keyTypeUsed == "serialNumber" %}
+    {% for result in results["data"] %}
+        {% if s_type == "deviceName" or form.types.data == "serialNumber" %}
             {% include '_machine_results.html' %}
         {% endif %}
-        {% if request.keyTypeUsed == "username" %}
+        {% if s_type == "username" %}
             {% include '_user_results.html' %}
         {% endif %} 
     {% endfor %}
     <hr>
-    <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous{% if not prev_url %} disabled{% endif %}">
-                <a href="{{ prev_url or '#' }}">
-                    <span aria-hidden="true">&larr;</span> Prev Batch
-                </a>
-            </li>
-            <li class="next{% if not next_url %} disabled{% endif %}">
-                <a href="{{ next_url or '#' }}">
-                    Next Batch <span aria-hidden="true">&rarr;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
 {% endblock %}

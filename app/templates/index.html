@@ -2,7 +2,4 @@
 
 {% block app_content %}   
     <h1>Hi, {{ current_user.username }}!</h1>
-    {% for action in actions %}
-    <div><p><b>Action taken:</b> {{ action.details }} <b>Tech:</b> {{ action.tech.username }}</p></div>
-    {% endfor %}
 {% endblock %}

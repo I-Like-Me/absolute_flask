@@ -52,9 +52,5 @@ def duo_callback():
 
 @bp.route('/logout')
 def logout():
-    my_requests = current_user.get_my_requests()
-    for request in my_requests:
-        db.session.delete(request)
-    db.session.commit()
     logout_user()
     return redirect(url_for('main.index'))
