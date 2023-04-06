@@ -9,7 +9,7 @@
         </div>
     </div>
     <hr>
-    {% for result in results["data"] %}
+    {% for result in results['data'] %}
         {% if s_type == "deviceName" or form.types.data == "serialNumber" %}
             {% include '_machine_results.html' %}
         {% endif %}

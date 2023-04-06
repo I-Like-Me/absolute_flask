@@ -1,21 +1,20 @@
 <div class="machine name text-center">
-    <h3><b>{{ result.deviceName }}</b></h3><br>
+    <h3><b>{{ results_dict['name'] }}</b></h3><br>
 </div>
-
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <p><b>-Manufacturer:</b> {{ result.systemManufacturer }}</p>
-            <p><b>-Model:</b> {{ result.systemModel }}</p>
-            <p><b>-Serial Number:</b> {{ result.serialNumber }}</p>
-            <p><b>-IP Address:</b>{{ result.localIp }}</p>
-            <p><b>-MAC Address:</b></p>
-            <p><b>-Last Connected:</b></p>
+            <p><b>-Manufacturer:</b> {{ results_dict['manufacturer'] }}</p>
+            <p><b>-Model:</b> {{ results_dict['model'] }}</p>
+            <p><b>-Serial Number:</b> {{ results_dict['serial'] }}</p>
+            <p><b>-IP Address:</b> {{ results_dict['ip'] }}</p>
+            <p><b>-MAC Address:</b> {{ results_dict['mac'] }}</p>
+            <p><b>-Last Connected:</b> {{ results_dict['connected'] }}</p>
         </div>
         <div class="col-md-4">
-            <p><b>-Recent Users:</b></p>
-            <p><b>-OS Product Level:</b></p>
-            <p><b>-Free Space:</b></p>
+            <p><b>-Last User:</b> {{ results_dict['user'] }}</p></p>
+            <p><b>-OS Product Level:</b> {{ results_dict['os'] }}</p>
+            <p><b>-Free Space:</b> {{ results_dict['space'] }} GB </p>
             <p><b>-Citrix Version:</b></p>
             <p><b>-Cortex:</b></p>
             <p><b>-InsightVM:</b></p>
