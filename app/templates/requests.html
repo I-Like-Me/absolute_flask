@@ -9,12 +9,16 @@
         </div>
     </div>
     <hr>
-    {% for result in results['data'] %}
+    {% for result in device_results['data'] %}
         {% if s_type == "deviceName" or form.types.data == "serialNumber" %}
-            {% include '_machine_results.html' %}
+            {% if result['agentStatus'] == "A" %}
+                {% include '_machine_results.html' %}
+            {% endif %}
         {% endif %}
         {% if s_type == "username" %}
-            {% include '_user_results.html' %}
+            {% if result['agentStatus'] == "A" %}
+                {% include '_user_results.html' %}
+            {% endif %}
         {% endif %} 
     {% endfor %}
     <hr>

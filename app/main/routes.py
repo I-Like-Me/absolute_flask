@@ -18,17 +18,18 @@ def index():
 @login_required
 def requests():
     form = RequestForm()
-    results = Abs_Actions.Abs_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
-    results_dict = Abs_Actions.prepare_data(results)
+    device_results = Abs_Actions.abs_device_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
+    app_results = Abs_Actions.abs_app_get(keyword_choice=request.args.get('s_keyword'))
+    results_dict = Abs_Actions.prepare_data(device_results, app_results)
     if form.validate_on_submit():
         if form.types.data == 'username':
             form.keyword.data = "AD%5C" + form.keyword.data
-        results = Abs_Actions.Abs_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
+        results = Abs_Actions.abs_device_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
         if results['data'] == []: 
             flash('Try different keyword.')
             return redirect(url_for('main.requests'))
         return redirect(url_for('main.requests', s_type=f"{form.types.data}", s_keyword=f"{form.keyword.data}"))
-    return render_template('requests.html', title='Requests', form=form, results=results, results_dict=results_dict, s_type=request.args.get('s_type'), s_keyword=request.args.get('s_keyword'))
+    return render_template('requests.html', title='Requests', form=form, device_results=device_results, results_dict=results_dict, app_results=app_results, s_type=request.args.get('s_type'), s_keyword=request.args.get('s_keyword'))
 
 @bp.route('/user/<username>')
 @login_required

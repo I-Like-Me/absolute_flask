@@ -15,9 +15,9 @@
             <p><b>-Last User:</b> {{ results_dict['user'] }}</p></p>
             <p><b>-OS Product Level:</b> {{ results_dict['os'] }}</p>
             <p><b>-Free Space:</b> {{ results_dict['space'] }} GB </p>
-            <p><b>-Citrix Version:</b></p>
-            <p><b>-Cortex:</b></p>
-            <p><b>-InsightVM:</b></p>
+            <p><b>-Citrix Version:</b> {{ results_dict['citrix'] }}</p>
+            <p><b>-Cortex:</b> {{ results_dict['cortex'] }}</p>
+            <p><b>-InsightVM:</b> {{ results_dict['insight'] }}</p>
         </div>
         <div class="col-md-4">
             <p><b>-Bitlocker Status:</b></p>
