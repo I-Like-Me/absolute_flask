@@ -22,6 +22,11 @@ class Log_Entry(db.Model):
 
     def __repr__(self):
         return f'<Log_Entry {self.body}>'
+    
+    def record_action(tech_name, a_type, a_keyword):
+        l = Log_Entry(body=f"{tech_name} ran a {a_type} search for {a_keyword}.", tech=tech_name)
+        db.session.add(l)
+        db.session.commit()
 
 
 
