@@ -38,7 +38,8 @@ def requests():
 @login_required
 def space_check():
     full_device_dict = Abs_Actions.abs_all_devices()
-    return render_template('space_check.html', title='Space Checker', full_device_dict=full_device_dict)
+    space_dict = Abs_Actions.build_space_list(full_device_dict)
+    return render_template('space_check.html', title='Space Checker', full_device_dict=full_device_dict, space_dict=space_dict)
 
 @bp.route('/user/<username>')
 @login_required

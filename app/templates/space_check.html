@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-{% for device in full_device_dict.data %}
-    <p>{{ device.deviceName }}</p>
+{% for device_space in space_dict %}
+    <p>{{ device_space }} - {{ space_dict[device_space] }} GB</p>
 {% endfor %}
 {% endblock %}

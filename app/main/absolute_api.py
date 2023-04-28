@@ -71,7 +71,7 @@ class Abs_Actions:
             "method": "GET",
             "contentType": "application/json",
             "uri": "/v3/reporting/devices",
-            "queryString": "pageSize=500",
+            "queryString": "pageSize=500&agentStatus=A",
             "payload": {}
         }
         request_payload_data = {
@@ -126,3 +126,12 @@ class Abs_Actions:
         clean_data['member'] = 'N/A'
         return clean_data
     
+    def build_space_list(all_machines):
+        space_dict = {}
+        for machine in all_machines['data']:
+            if 'volumes' in machine:
+                for volume in machine['volumes']:
+                    if 'driveLetter' in volume and volume['driveLetter'] == 'C:':
+                        if round(int(volume['freeSpaceBytes'])/(1024*1024*1024)) <= 25:
+                            space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
+        return space_dict
