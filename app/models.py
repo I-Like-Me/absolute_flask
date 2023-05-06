@@ -1,4 +1,3 @@
-from datetime import datetime
 from app import db, login
 from flask_login import UserMixin
 
@@ -9,24 +8,28 @@ def load_user(id):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    entries = db.relationship('Log_Entry', backref='tech', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.username}>'
 
-class Log_Entry(db.Model):
+class App(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    name = db.Column(db.String(64), index=True, unique=True)
+    versions = db.relationship('Version', backref='program', lazy='dynamic')
 
     def __repr__(self):
-        return f'<Log_Entry {self.body}>'
+        return f'<App {self.name}>'
+
+
+class Version(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(64), index=True, unique=True)
+    app_id = db.Column(db.Integer, db.ForeignKey('app.id'))
+
+    def __repr__(self):
+        return f'<Version {self.key}>'
     
-    def record_action(tech_name, a_type, a_keyword):
-        l = Log_Entry(body=f"{tech_name} ran a {a_type} search for {a_keyword}.", tech=tech_name)
-        db.session.add(l)
-        db.session.commit()
+
 
 
 

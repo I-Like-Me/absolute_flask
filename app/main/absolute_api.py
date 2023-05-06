@@ -64,14 +64,14 @@ class Abs_Actions:
         r_json = r.json()
         return r_json
     
-    def abs_all_devices():
+    def abs_all_devices(quSt):
         token_id = Config.ABS_API_KEY
         token_secret = Config.ABS_API_SECRET
         request = {
             "method": "GET",
             "contentType": "application/json",
             "uri": "/v3/reporting/devices",
-            "queryString": "pageSize=500&agentStatus=A",
+            "queryString": quSt,
             "payload": {}
         }
         request_payload_data = {
@@ -92,6 +92,25 @@ class Abs_Actions:
         r = requests.post(request_url, signed, {"content-type": "text/plain"})
         r_json = r.json()
         return r_json
+
+    def graph_prep():
+        graph_ready = {}
+        all_results = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
+        counter = 0
+        for machine in all_results['data']:
+            counter += 1
+        graph_ready['total'] = counter
+        counter = 0
+        for machine in all_results['data']:
+            if 'volumes' in machine:
+                for volume in machine['volumes']:
+                    if 'driveLetter' in volume and volume['driveLetter'] == 'C:':
+                        if round(int(volume['freeSpaceBytes'])/(1024*1024*1024)) <= 25:
+                            counter += 1
+        graph_ready['less_then_25'] = counter        
+        return graph_ready
+        
+        
 
     def prepare_data(raw_device_data, raw_app_data):
         clean_data = {}
