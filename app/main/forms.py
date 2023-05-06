@@ -8,5 +8,7 @@ class RequestForm(FlaskForm):
     submit = SubmitField('Search')
 
 class AppVerForm(FlaskForm):
-    app = SelectField('app', choices=[])
-    version = SelectField('version', choices=[])
+    app = SelectField('Application', choices=[])
+    version = SelectField('Version', choices=[])
+    operator = SelectField('Comparison Operator', choices=["is", "not", "less than", "greater than", "is not", "is or less than", "is or greater than"])
+   

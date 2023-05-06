@@ -37,13 +37,20 @@ def login():
 
 @bp.route("/duo-callback", methods=['GET', 'POST'])
 def duo_callback():
+    state = request.args.get('state')
+    form = LoginForm()
     if 'state' in session and 'username' in session:
+        saved_state = session['state']
         username = session['username']
+    else:
+        return render_template("auth/login.html", message="No saved state", title='Login', form=form)
+    if state != saved_state:
+        return render_template("auth/login.html", message="Duo state != saved state", title='Login', form=form)
     user = User.query.filter_by(username=username).first()
     login_user(user)
     next_page = request.args.get('next')
     if not next_page or url_parse(next_page).netloc != '':
-        next_page = url_for('auth.login')
+        next_page = url_for('main.index')
     return redirect(next_page)
 
 @bp.route('/logout')

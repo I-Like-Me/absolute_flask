@@ -41,6 +41,7 @@ def space_check():
 @bp.route('/version_check', methods=['GET', 'POST'])
 @login_required
 def version_check():
+
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
     appverforms.version.choices = [(version.id, version.key)for version in Version.query.filter_by(app_id='1').all()]

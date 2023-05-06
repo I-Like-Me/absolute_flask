@@ -93,6 +93,13 @@ class Abs_Actions:
         r_json = r.json()
         return r_json
 
+    def ver_chk():
+        deviceList = []
+        full_results = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
+        for machine in full_results['data']:
+            deviceList.append(machine['deviceName'])
+        return deviceList
+
     def graph_prep():
         graph_ready = {}
         all_results = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
