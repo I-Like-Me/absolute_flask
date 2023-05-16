@@ -1,10 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
 from app import db
-from app.main.forms import RequestForm, AppVerForm, SpaceForm
+from app.main.forms import RequestForm, AppVerForm
 from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
+from app.main.tool_box import Jsonizers, Dict_Builder
 from app.main import bp
+
 
 
 @bp.route('/')
@@ -20,7 +22,7 @@ def requests():
     form = RequestForm()
     device_results = Abs_Actions.abs_device_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
     app_results = Abs_Actions.abs_app_get(keyword_choice=request.args.get('s_keyword'))
-    results_dict = Abs_Actions.prepare_data(device_results, app_results)
+    results_dict = Dict_Builder.build_machine_dict(device_results, app_results)
     if form.validate_on_submit():
         if form.types.data == 'username':
             form.keyword.data = "AD%5C" + form.keyword.data
@@ -39,8 +41,8 @@ def space_check():
 @bp.route('/space/data')
 def space_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
-    space_dict = Abs_Actions.build_space_list(full_device_dict)
-    return {'data': [Abs_Actions.space_json(key, value) for key, value in space_dict.items()]}
+    space_dict = Dict_Builder.build_space_dict(full_device_dict)
+    return {'data': [Jsonizers.space_json(key, value) for key, value in space_dict.items()]}
 
 @bp.route('/version_check', methods=['GET', 'POST'])
 @login_required
