@@ -7,6 +7,9 @@ class RequestForm(FlaskForm):
     types = RadioField('Keyword Type', choices=[('deviceName','device name'),('username','user name'),('serialNumber','serial number')], default='deviceName')
     submit = SubmitField('Search')
 
+class SpaceForm(FlaskForm):
+    sort = SelectField('Sort By', choices=["Name: A to Z", "Name: Z to A", "Size: High to Low", "Size: Low to High"])
+
 class AppVerForm(FlaskForm):
     app = SelectField('Application', choices=[])
     version = SelectField('Version', choices=[])

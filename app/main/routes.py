@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
 from app import db
-from app.main.forms import RequestForm, AppVerForm
+from app.main.forms import RequestForm, AppVerForm, SpaceForm
 from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
@@ -34,9 +34,13 @@ def requests():
 @bp.route('/space_check', methods=['GET', 'POST'])
 @login_required
 def space_check():
+    return render_template('space_check.html', title='Space Checker')
+
+@bp.route('/space/data')
+def space_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
     space_dict = Abs_Actions.build_space_list(full_device_dict)
-    return render_template('space_check.html', title='Space Checker', full_device_dict=full_device_dict, space_dict=space_dict)
+    return {'data': [Abs_Actions.space_json(key, value) for key, value in space_dict.items()]}
 
 @bp.route('/version_check', methods=['GET', 'POST'])
 @login_required
@@ -72,9 +76,8 @@ def graphs():
     
     return render_template('graphs.html', title='Graphs')
 
-@bp.route('/user/<username>')
+@bp.route('/feedback', methods=['GET', 'POST'])
 @login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-
-    return render_template('user.html', user=user)
+def feedback():
+    
+    return render_template('feedback.html', title='Feedback')

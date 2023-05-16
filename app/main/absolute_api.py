@@ -161,3 +161,9 @@ class Abs_Actions:
                         if round(int(volume['freeSpaceBytes'])/(1024*1024*1024)) <= 25:
                             space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
         return space_dict
+
+    def space_json(key, value):
+        return {
+            'device': key,
+            'size': value
+        }

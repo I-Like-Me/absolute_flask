@@ -1,7 +1,29 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-{% for device_space in space_dict %}
-    <p>{{ device_space }} - {{ space_dict[device_space] }} GB</p>
-{% endfor %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Device Name</th>
+        <th>Space Remaining</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  {{ pizza }}
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        ajax: '/space/data',
+        columns: [
+          {data: 'device'},
+          {data: 'size', searchable: false},
+        ],
+      });
+    });
+  </script>
 {% endblock %}
