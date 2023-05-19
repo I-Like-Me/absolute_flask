@@ -20,6 +20,26 @@
             </div>
         </form>       
     </div>
+    {% if clean_version_dict != None %}
+        <table id="data" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Device Name:</th>
+                    <th>Application:</th>
+                    <th>Version:</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in clean_version_dict.items() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value[0] }}</td>
+                        <td>{{ value[1] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
     <script>
         let app_select = document.getElementById('app');
         let version_select = document.getElementById('version');
@@ -41,5 +61,12 @@
         }
     </script>
 
-    {{ deviceAppNameList }}
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable();
+    });
+  </script>
 {% endblock %}

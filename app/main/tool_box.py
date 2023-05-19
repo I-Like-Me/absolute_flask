@@ -10,8 +10,9 @@ class Jsonizers:
 
     def version_json(key, value):
         return {
-            'app': key,
-            'version': value
+            'device':key,
+            'app': value[0],
+            'version': value[1]
         } 
 
 class Dict_Builder:
@@ -59,3 +60,29 @@ class Dict_Builder:
         clean_data['member'] = 'N/A'
         return clean_data
     
+    def build_version_dict(app_choice, raw_data):
+        version_dict = {}
+        if app_choice == 'Citrix':
+            for app in raw_data['data']:
+                if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
+                    version_dict[app['deviceName']] = [app['appName'], app['appVersion']]
+        if app_choice == 'Zoom':
+            for app in raw_data['data']:
+                if 'Zoom' in app['appName'] or 'Zoom(32bit)' in app['appName']:
+                    version_dict[app['deviceName']] = [app['appName'], app['appVersion']]
+        if app_choice == 'Windows Product Level':
+            for app in raw_data['data']:
+                if 'build' in app['operatingSystem']:
+                    version_dict[app['deviceName']] = ["Windows", library.product_levels[app['operatingSystem']['build']]]
+        return version_dict
+    
+class Translators:
+
+    def app_select_tlr(app_choice):
+        if app_choice == 'Citrix':
+            return "/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A"
+        if app_choice == 'Zoom':
+            return "/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Zoom')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A"
+        if app_choice == 'Windows Product Level':
+            return "/v3/reporting/devices", "pageSize=500&agentStatus=A"
+        

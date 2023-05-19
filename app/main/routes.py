@@ -1,12 +1,11 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
+from flask import render_template, flash, redirect, url_for, request, current_app, jsonify, session
 from app import db
 from app.main.forms import RequestForm, AppVerForm
 from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
-from app.main.tool_box import Jsonizers, Dict_Builder
+from app.main.tool_box import Jsonizers, Dict_Builder, Translators as Tlr
 from app.main import bp
-
 
 
 @bp.route('/')
@@ -14,7 +13,6 @@ from app.main import bp
 @login_required
 def index():
     return render_template('index.html', title='Workbench')
-
 
 @bp.route('/requests', methods=['GET', 'POST'])
 @login_required
@@ -47,35 +45,32 @@ def space_data():
 @bp.route('/version_check', methods=['GET', 'POST'])
 @login_required
 def version_check():
-
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
     appverforms.version.choices = [(version.id, version.key)for version in Version.query.filter_by(app_id='1').all()]
-    
+    clean_version_dict = None
     if request.method == 'POST':
-        version = Version.query.filter_by(id=appverforms.version.data).first()
-        return f'<h1>App: {appverforms.app.data}, Version: {version.key}</h1>'
-
-    return render_template('version_check.html', title='Version Checker', appverforms=appverforms)
+        chosen_version = Version.query.filter_by(id=appverforms.version.data).first()
+        chosen_app = App.query.filter_by(id=appverforms.app.data).first()
+        app_data_all = Abs_Actions.app_version_get(Tlr.app_select_tlr(chosen_app.name)[0], Tlr.app_select_tlr(chosen_app.name)[1])
+        clean_version_dict = Dict_Builder.build_version_dict(chosen_app.name, app_data_all)
+        return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
+    return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
 
 @bp.route('/version_check/version/<app>')
 def version(app):
     versions = Version.query.filter_by(app_id=app).all()
-    
     versionList = []
-
     for version in versions:
         versionObj = {}
         versionObj['id'] = version.id
         versionObj['key'] = version.key
         versionList.append(versionObj)
-    
     return jsonify({'versions' : versionList})
 
 @bp.route('/graphs', methods=['GET', 'POST'])
 @login_required
 def graphs():
-    
     return render_template('graphs.html', title='Graphs')
 
 @bp.route('/feedback', methods=['GET', 'POST'])
