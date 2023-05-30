@@ -86,3 +86,89 @@ class Translators:
         if app_choice == 'Windows Product Level':
             return "/v3/reporting/devices", "pageSize=500&agentStatus=A"
         
+class Table_List_Builder:
+    
+    def build_version_list(app_name, raw_data):
+        unique_library_dict = {}
+        if app_name == 'Citrix':
+            for app in raw_data['data']:
+                if 'Citrix Workspace' in app['appName']:
+                    if app['appName'] not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
+                        unique_library_dict[app['appName']] = app['appVersion']                    
+                if 'Citrix Receiver' in app['appName']:
+                    temp_receiver_name = f"{app['appName']}{app['appVersion']}"
+                    if temp_receiver_name not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
+                        unique_library_dict[temp_receiver_name] = app['appVersion']
+        if app_name == 'Zoom':
+            for app in raw_data['data']:
+                if 'Zoom' in app['appName'] or 'Zoom(32bit)' in app['appName'] and app['appName'] not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
+                    unique_library_dict[app['appName']] = app['appVersion']
+        return unique_library_dict
+
+class Library_Table_Dict_Builders:
+
+    def ctx_lib_tab_dict(app_name, raw_data):
+        unique_library_dict = {}
+        if app_name == 'Citrix':
+            for app in raw_data['data']:
+                if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
+                    correct_ver_name = VNM.citrix_name_maker(app['appVersion'])
+                    if correct_ver_name not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
+                        unique_library_dict[correct_ver_name] = app['appVersion']                    
+
+        if app_name == 'Zoom':
+            unique_library_dict = {}
+            for app in raw_data['data']:
+                if 'Zoom' in app['appName'] or 'Zoom(32bit)' in app['appName']:
+                    correct_ver_name = VNM.zoom_name_maker(app['appVersion'])
+                    if correct_ver_name not in unique_library_dict.values():
+                        unique_library_dict[correct_ver_name] = app['appVersion']
+        return unique_library_dict
+
+class VNM: #Verison Name Maker
+
+    def citrix_name_maker(old_ver):
+        new_ver_name = ''
+        fin_idx = 0
+        sd = ['1','2','3','4','5','6','7','8','9']
+        new_ver_name += old_ver[0:2]
+        if old_ver[3] == '0' and old_ver[4] in sd or old_ver[3] in sd and old_ver[4] in sd or old_ver[3] in sd and old_ver[4] in '0':
+            new_ver_name += old_ver[3:5]
+            fin_idx = 6
+        if old_ver[3] == 0 and old_ver[4] == '.':
+            new_ver_name += '00'
+            fin_idx = 5
+        if old_ver[3] in sd and old_ver[4] == '.':
+            new_ver_name += '0'
+            new_ver_name += old_ver[3]
+            fin_idx = 5
+        new_ver_name += '.'    
+        new_ver_name += old_ver[fin_idx:]
+        return new_ver_name
+    
+    def zoom_name_maker(old_ver):
+        old_ver = old_ver
+        if ' ' in old_ver:
+            old_ver = old_ver[:old_ver.index(' ')]
+        new_ver_name = ''
+        first_fin_idx = 0
+        second_fin_idx = 0
+        if old_ver.count('.') == 2:
+            if old_ver[1] == '.':
+                new_ver_name += '0'
+                new_ver_name += old_ver[0:2]
+                first_fin_idx = 2
+            if old_ver[1] != '.':
+                new_ver_name += old_ver[0:3]
+                first_fin_idx = 3
+            if old_ver[first_fin_idx-1] == '.' and old_ver[first_fin_idx +2] == '.':
+                new_ver_name += old_ver[first_fin_idx:first_fin_idx+3]
+                second_fin_idx += first_fin_idx+3
+            if old_ver[first_fin_idx-1] == '.' and old_ver[first_fin_idx +2] != '.':
+                new_ver_name += '0'
+                new_ver_name += old_ver[first_fin_idx:first_fin_idx+2]
+                second_fin_idx += first_fin_idx+2
+            if old_ver[-2] == '.':
+                new_ver_name += '0'
+            new_ver_name += old_ver[second_fin_idx:]
+        return new_ver_name

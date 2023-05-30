@@ -23,11 +23,12 @@ class App(db.Model):
 
 class Version(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.String(64), index=True, unique=True)
+    fake_key = db.Column(db.String(64), index=True, unique=True)
+    true_key = db.Column(db.String(64), index=True, unique=True)
     app_id = db.Column(db.Integer, db.ForeignKey('app.id'))
 
     def __repr__(self):
-        return f'<Version {self.key}>'
+        return f'<Version {self.fake_key}>'
     
 
 

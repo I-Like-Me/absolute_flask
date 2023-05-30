@@ -51,7 +51,7 @@
                 response.json().then(function(data) {
                     let optionHTML = ''; 
                     for (let version of data.versions) {
-                        optionHTML += '<option value="' + version.id + '">' + version.key + '</option>';
+                        optionHTML += '<option value="' + version.id + '">' + version.fake_key + '</option>';
                     }
 
                     version_select.innerHTML = optionHTML;

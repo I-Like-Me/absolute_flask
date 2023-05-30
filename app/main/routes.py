@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, jsonify, session
+from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
 from app import db
 from app.main.forms import RequestForm, AppVerForm
 from flask_login import current_user, login_required
@@ -47,7 +47,7 @@ def space_data():
 def version_check():
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
-    appverforms.version.choices = [(version.id, version.key)for version in Version.query.filter_by(app_id='1').all()]
+    appverforms.version.choices = [(version.id, version.fake_key)for version in Version.query.filter_by(app_id='1').order_by(Version.fake_key.desc()).all()]
     clean_version_dict = None
     if request.method == 'POST':
         chosen_version = Version.query.filter_by(id=appverforms.version.data).first()
@@ -59,12 +59,12 @@ def version_check():
 
 @bp.route('/version_check/version/<app>')
 def version(app):
-    versions = Version.query.filter_by(app_id=app).all()
+    versions = Version.query.filter_by(app_id=app).order_by(Version.fake_key.desc()).all()
     versionList = []
     for version in versions:
         versionObj = {}
         versionObj['id'] = version.id
-        versionObj['key'] = version.key
+        versionObj['fake_key'] = version.fake_key
         versionList.append(versionObj)
     return jsonify({'versions' : versionList})
 
@@ -72,9 +72,3 @@ def version(app):
 @login_required
 def graphs():
     return render_template('graphs.html', title='Graphs')
-
-@bp.route('/feedback', methods=['GET', 'POST'])
-@login_required
-def feedback():
-    
-    return render_template('feedback.html', title='Feedback')

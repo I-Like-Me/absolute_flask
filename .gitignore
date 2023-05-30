@@ -7,3 +7,4 @@ key.pem
 config.py
 app.db
 logs/workbench.log
+logs/workbench.log.1
