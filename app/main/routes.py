@@ -53,7 +53,8 @@ def version_check():
         chosen_version = Version.query.filter_by(id=appverforms.version.data).first()
         chosen_app = App.query.filter_by(id=appverforms.app.data).first()
         app_data_all = Abs_Actions.app_version_get(Tlr.app_select_tlr(chosen_app.name)[0], Tlr.app_select_tlr(chosen_app.name)[1])
-        clean_version_dict = Dict_Builder.build_version_dict(chosen_app.name, app_data_all)
+        all_app_versions = Version.query.filter_by(app_id=chosen_app.id).all()
+        clean_version_dict = Dict_Builder.build_version_dict(chosen_app, app_data_all, all_app_versions) # here
         return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
     return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
 
