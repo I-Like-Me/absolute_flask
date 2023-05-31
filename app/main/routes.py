@@ -48,16 +48,18 @@ def version_check():
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
     appverforms.version.choices = [(version.id, version.fake_key)for version in Version.query.filter_by(app_id='1').order_by(Version.fake_key.desc()).all()]
-    clean_version_dict = None
+    filtered_version_dict = None
     if request.method == 'POST':
         chosen_version = Version.query.filter_by(id=appverforms.version.data).first()
         chosen_app = App.query.filter_by(id=appverforms.app.data).first()
+        chosen_operator = appverforms.operator.data
         appverforms.version.choices = [(version.id, version.fake_key)for version in Version.query.filter_by(app_id=str(chosen_app.id)).order_by(Version.fake_key.desc()).all()]
         app_data_all = Abs_Actions.app_version_get(Tlr.app_select_tlr(chosen_app.name)[0], Tlr.app_select_tlr(chosen_app.name)[1])
         all_app_versions = Version.query.filter_by(app_id=chosen_app.id).all()
         clean_version_dict = Dict_Builder.build_version_dict(chosen_app, app_data_all, all_app_versions) # here
-        return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
-    return render_template('version_check.html', title='Version Checker', appverforms=appverforms, clean_version_dict=clean_version_dict)
+        filtered_version_dict = Tlr.opt_select_tlr(chosen_operator, chosen_version, clean_version_dict)
+        return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
+    return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
 
 @bp.route('/version_check/version/<app>')
 def version(app):

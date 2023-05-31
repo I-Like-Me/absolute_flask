@@ -92,6 +92,23 @@ class Translators:
         if app_choice == 'Windows Product Level':
             return "/v3/reporting/devices", "pageSize=500&agentStatus=A"
         
+    def opt_select_tlr(operator, ver_choice, ver_dict):
+        filtered_dict = {}
+        for ver_key, ver_val in ver_dict.items():
+            if operator == "is" and ver_val[1] == ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+            if operator == "not" and ver_val[1] != ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+            if operator == "less than" and ver_val[1] < ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+            if operator == "greater than" and ver_val[1] > ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+            if operator == "is or less than" and ver_val[1] <= ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+            if operator == "is or greater than" and ver_val[1] >= ver_choice.fake_key:
+                filtered_dict[ver_key] = ver_val
+        return filtered_dict
+    
 class Table_List_Builder:
     
     def build_version_list(app_name, raw_data):

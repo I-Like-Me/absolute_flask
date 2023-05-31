@@ -20,7 +20,7 @@
             </div>
         </form>       
     </div>
-    {% if clean_version_dict != None %}
+    {% if filtered_version_dict != None %}
         <table id="data" class="table table-striped">
             <thead>
                 <tr>
@@ -30,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for key, value in clean_version_dict.items() %}
+                {% for key, value in filtered_version_dict.items() %}
                     <tr>
                         <td>{{ key }}</td>
                         <td>{{ value[0] }}</td>
