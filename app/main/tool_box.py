@@ -159,6 +159,18 @@ class VNM: #Verison Name Maker
         new_ver_name = ''
         first_fin_idx = 0
         second_fin_idx = 0
+        if old_ver.count('.') == 1:
+            if old_ver[1] == '.':
+                new_ver_name += '0'
+                new_ver_name += old_ver[0:2]
+                first_fin_idx = 2
+            if old_ver[1] != '.':
+                new_ver_name += old_ver[0:3]
+                first_fin_idx = 3
+            if old_ver[first_fin_idx-1] == '.' and old_ver[-2] == '.':
+                new_ver_name += '0'
+                new_ver_name += old_ver[-1]
+            return new_ver_name      
         if old_ver.count('.') == 2:
             if old_ver[1] == '.':
                 new_ver_name += '0'
@@ -177,4 +189,4 @@ class VNM: #Verison Name Maker
             if old_ver[-2] == '.':
                 new_ver_name += '0'
             new_ver_name += old_ver[second_fin_idx:]
-        return new_ver_name
+            return new_ver_name
