@@ -27,7 +27,7 @@ class Dict_Builder:
                             space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
         return space_dict
 
-    def build_machine_dict(raw_device_data, raw_app_data):
+    def build_machine_dict(raw_device_data, raw_app_data, raw_bit_data):
         clean_data = {}
         clean_data['name'] = raw_device_data['data'][0]['deviceName']
         clean_data['manufacturer'] = raw_device_data['data'][0]['systemManufacturer']
@@ -56,7 +56,10 @@ class Dict_Builder:
         for app in raw_app_data['data']:
             if 'Rapid7' in app['appName']: 
                 clean_data['insight'] = 'Yes'
-        clean_data['bitlocker'] = 'N/A'
+        if str(raw_bit_data[0]) == '<Response [200]>':
+            clean_data['bitlocker'] = raw_bit_data[1]['data']['cdfFieldValue']
+        if str(raw_bit_data[0]) != '<Response [200]>':
+            clean_data['bitlocker'] = 'no entry'
         clean_data['member'] = 'N/A'
         return clean_data
     

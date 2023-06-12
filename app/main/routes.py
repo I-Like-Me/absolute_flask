@@ -20,7 +20,8 @@ def requests():
     form = RequestForm()
     device_results = Abs_Actions.abs_device_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
     app_results = Abs_Actions.abs_app_get(keyword_choice=request.args.get('s_keyword'))
-    results_dict = Dict_Builder.build_machine_dict(device_results, app_results)
+    bitkey = Abs_Actions.abs_device_bitkey(device_results['data'][0]['deviceUid'])
+    results_dict = Dict_Builder.build_machine_dict(device_results, app_results, bitkey)
     if form.validate_on_submit():
         if form.types.data == 'username':
             form.keyword.data = "AD%5C" + form.keyword.data
