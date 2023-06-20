@@ -5,8 +5,12 @@ from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
 from app.main.tool_box import Jsonizers, Dict_Builder, Translators as Tlr
+from app.main.d3_tools import Pie_Tool, Bar_Tool
 from app.main import bp
+import pandas as pd
 
+data_df = pd.read_csv("app/static/data/test_data.csv")
+viz_data_df = data_df[(data_df['Churn']=="Yes").notnull()] 
 
 @bp.route('/')
 @bp.route('/index')
@@ -77,3 +81,13 @@ def version(app):
 @login_required
 def graphs():
     return render_template('graphs.html', title='Graphs')
+
+@bp.route('/get_piechart_data')
+def get_piechart_data():
+    piechart_data = Pie_Tool.piechart_data(viz_data_df)
+    return jsonify(piechart_data)
+
+@bp.route('/get_barchart_data')
+def get_barchart_data():
+    barchart_data = Bar_Tool.barchart_data(viz_data_df)
+    return jsonify(barchart_data)
