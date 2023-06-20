@@ -54,6 +54,10 @@ class AD_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<AD_Viz_Data {self.timestamp}>'
@@ -74,6 +78,10 @@ class AD_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<AD_LP_Viz_Data {self.timestamp}>'
@@ -94,6 +102,10 @@ class AI_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<AI_Viz_Data {self.timestamp}>'
@@ -114,6 +126,10 @@ class AI_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<AI_LP_Viz_Data {self.timestamp}>'
@@ -134,6 +150,10 @@ class CONF_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<CONF_Viz_Data {self.timestamp}>'
@@ -154,6 +174,10 @@ class CS3_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<CS3_Viz_Data {self.timestamp}>'
@@ -174,6 +198,10 @@ class CS4_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<CS4_Viz_Data {self.timestamp}>'
@@ -194,6 +222,10 @@ class CS_BK_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<CS_BK_Viz_Data {self.timestamp}>'
@@ -214,6 +246,10 @@ class CS_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<CS_LP_Viz_Data {self.timestamp}>'
@@ -234,6 +270,10 @@ class FAC_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<FAC_Viz_Data {self.timestamp}>'
@@ -254,6 +294,10 @@ class FAC_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<FAC_LP_Viz_Data {self.timestamp}>'
@@ -274,6 +318,10 @@ class FI_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<FI_LP_Viz_Data {self.timestamp}>'
@@ -294,6 +342,10 @@ class FI_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<FI_LP_Viz_Data {self.timestamp}>'
@@ -314,6 +366,10 @@ class GLOBAL_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<GLOBAL_Viz_Data {self.timestamp}>'
@@ -334,6 +390,10 @@ class HPO_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<HPO_Viz_Data {self.timestamp}>'
@@ -354,6 +414,10 @@ class HPO_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<HPO_LP_Viz_Data {self.timestamp}>'
@@ -374,6 +438,10 @@ class IF_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<IF_Viz_Data {self.timestamp}>'
@@ -394,6 +462,10 @@ class IF_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<IF_LP_Viz_Data {self.timestamp}>'
@@ -414,6 +486,10 @@ class IT_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<IT_Viz_Data {self.timestamp}>'
@@ -434,6 +510,10 @@ class IT_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<IT_LP_Viz_Data {self.timestamp}>'
@@ -454,6 +534,10 @@ class KIT_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<KIT_Viz_Data {self.timestamp}>'
@@ -474,6 +558,10 @@ class MC2_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MC2_Viz_Data {self.timestamp}>'
@@ -494,6 +582,10 @@ class MC3_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MC3_Viz_Data {self.timestamp}>'
@@ -514,6 +606,10 @@ class MC_BK_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MC_BK_Viz_Data {self.timestamp}>'
@@ -534,6 +630,10 @@ class MC_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MC_LP_Viz_Data {self.timestamp}>'
@@ -554,6 +654,10 @@ class MR_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MR_Viz_Data {self.timestamp}>'
@@ -574,6 +678,10 @@ class MR_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<MR_LP_Viz_Data {self.timestamp}>'
@@ -594,6 +702,10 @@ class NH_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<NH_Viz_Data {self.timestamp}>'
@@ -614,6 +726,10 @@ class NH_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<NH_LP_Viz_Data {self.timestamp}>'
@@ -634,6 +750,10 @@ class OFF_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<OFF_Viz_Data {self.timestamp}>'
@@ -654,6 +774,10 @@ class OPTO_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<OPTO_Viz_Data {self.timestamp}>'
@@ -674,6 +798,10 @@ class OPTO_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<OPTO_LP_Viz_Data {self.timestamp}>'
@@ -694,6 +822,10 @@ class PA_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PA_Viz_Data {self.timestamp}>'
@@ -714,6 +846,10 @@ class PA_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PA_LP_Viz_Data {self.timestamp}>'
@@ -734,6 +870,10 @@ class PC3_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PC3_Viz_Data {self.timestamp}>'
@@ -754,6 +894,10 @@ class PC4_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PC4_Viz_Data {self.timestamp}>'
@@ -774,6 +918,10 @@ class PC_BK_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PC_BK_Viz_Data {self.timestamp}>'
@@ -794,6 +942,10 @@ class PC_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PC_LP_Viz_Data {self.timestamp}>'
@@ -814,6 +966,10 @@ class PH_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PH_Viz_Data {self.timestamp}>'
@@ -834,6 +990,10 @@ class PH_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PH_LP_Viz_Data {self.timestamp}>'
@@ -854,6 +1014,10 @@ class POPUP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<POPUP_Viz_Data {self.timestamp}>'
@@ -874,6 +1038,10 @@ class PT_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PT_Viz_Data {self.timestamp}>'
@@ -894,6 +1062,10 @@ class PT_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<PT_LP_Viz_Data {self.timestamp}>'
@@ -914,6 +1086,10 @@ class SP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<SP_Viz_Data {self.timestamp}>' 
@@ -934,6 +1110,10 @@ class SP_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<SP_LP_Viz_Data {self.timestamp}>'
@@ -954,6 +1134,10 @@ class WH_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<WH_Viz_Data {self.timestamp}>'
@@ -974,6 +1158,10 @@ class WH_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<WH_LP_Viz_Data {self.timestamp}>'
@@ -994,6 +1182,10 @@ class WL_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
 
     def __repr__(self):
         return f'<WL_Viz_Data {self.timestamp}>'
@@ -1014,6 +1206,10 @@ class WL_LP_Viz_Data(db.Model):
     vul_count = db.Column(db.Integer, index=True)
     exp_count = db.Column(db.Integer, index=True)
     mal_count = db.Column(db.Integer, index=True)
-
+    year_2_count = db.Column(db.Integer, index=True)
+    year_3_count = db.Column(db.Integer, index=True)
+    year_4_count = db.Column(db.Integer, index=True)
+    year_5_count = db.Column(db.Integer, index=True)
+    
     def __repr__(self):
         return f'<WL_LP_Viz_Data {self.timestamp}>'
