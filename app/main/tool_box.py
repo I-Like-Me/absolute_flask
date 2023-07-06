@@ -513,4 +513,34 @@ class Data_fillers:
                         dict_series[device_dicts[device]['dept']]['year_4_count'] += 1
                     if device_dicts[device]['age'] >= 5:
                         dict_series[device_dicts[device]['dept']]['year_5_count'] += 1
+                if device_dicts[device]['ncr_status'] != None:
+                    if device_dicts[device]['ncr_status'] == True:
+                        dict_series[device_dicts[device]['dept']]['bit_count'] += 1
+                if device_dicts[device]['cor'] != None:
+                    if device_dicts[device]['cor'] == True:
+                        dict_series[device_dicts[device]['dept']]['cor_count'] += 1
+                if device_dicts[device]['ivm'] != None:
+                    if device_dicts[device]['ivm'] == True:
+                        dict_series[device_dicts[device]['dept']]['ivm_count'] += 1
+                if device_dicts[device]['manufacturer'] != None:
+                    if device_dicts[device]['manufacturer'] == 'Dell':
+                        dict_series[device_dicts[device]['dept']]['dell_count'] += 1
+                if device_dicts[device]['manufacturer'] != None:
+                    if device_dicts[device]['manufacturer'] == 'Lenovo':
+                        dict_series[device_dicts[device]['dept']]['lenovo_count'] += 1 
+                dict_series[device_dicts[device]['dept']]['vul_count'] += device_dicts[device]['vul_count']
+                dict_series[device_dicts[device]['dept']]['exp_count'] += device_dicts[device]['exp_count']
+                dict_series[device_dicts[device]['dept']]['mal_count'] += device_dicts[device]['mal_count']
+                if device_dicts[device]['ctx_ver'] != None:
+                    if device_dicts[device]['ctx_ver'] not in version_tracker[device_dicts[device]['dept']]['citrix']:
+                        dict_series[device_dicts[device]['dept']]['ctx_ver_count'] += 1
+                        version_tracker[device_dicts[device]['dept']]['citrix'].append(device_dicts[device]['ctx_ver'])
+                if device_dicts[device]['zm_ver'] != None:
+                    if device_dicts[device]['zm_ver'] not in version_tracker[device_dicts[device]['dept']]['zoom']:
+                        dict_series[device_dicts[device]['dept']]['zm_ver_count'] += 1
+                        version_tracker[device_dicts[device]['dept']]['zoom'].append(device_dicts[device]['zm_ver']) 
+                if device_dicts[device]['wpl_ver'] != None:
+                    if device_dicts[device]['wpl_ver'] not in version_tracker[device_dicts[device]['dept']]['build']:
+                        dict_series[device_dicts[device]['dept']]['wpl_ver_count'] += 1
+                        version_tracker[device_dicts[device]['dept']]['build'].append(device_dicts[device]['wpl_ver'])    
         return dict_series
