@@ -192,7 +192,7 @@ class Translators:
             return True
         else:
             return False
-
+        
     def get_dept(device_name, device_subnet):
         dept_global = ["FLORANCE", "CSLA", "BUENOS", "BERLIN", "PRAGUE"]
         dept_offsite = ["128.122.101", "216.165.95", "128.122.111", "128.122.132", "128.122.226"]
@@ -259,9 +259,9 @@ class Translators:
         if device_subnet[:11] in dept_offsite:
             return "OFF_Viz_Data"
         for dept in dept_subnets:
-            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:10] in dept_subnets[dept]:
+            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:9] in dept_subnets[dept]:
                 return dept
-            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:11] in dept_subnets[dept]:
+            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:10] in dept_subnets[dept]:
                 return dept
         for dept in dept_lp:
             if device_name[:dept_lp[dept]] == dept[:dept_lp[dept]]:
@@ -358,6 +358,14 @@ class BDT: #Blank Dict Template
         }
         return device_dict_name
     
+    def blank_unique_ver_dict(dept_dict_names):
+        dept_dict_names = {
+            'citrix': [],
+            'zoom': [],
+            'build': []
+        }
+        return dept_dict_names
+    
 class MDG: #Multi Dict Generator
     
     def build_graph_series():
@@ -385,6 +393,25 @@ class MDG: #Multi Dict Generator
         for name in device_names:
             device_series[name] = BDT.blank_device_dict(name)
         return device_series
+    
+    def build_unique_ver_tracker():
+        dept_list = ["AD_Viz_Data", "AD_LP_Viz_Data", "AI_Viz_Data", "AI_LP_Viz_Data", 
+                     "CONF_Viz_Data", "CS3_Viz_Data", "CS4_Viz_Data", "CS_BK_Viz_Data", 
+                     "CS_LP_Viz_Data", "FAC_Viz_Data", "FAC_LP_Viz_Data", "FI_Viz_Data", 
+                     "FI_LP_Viz_Data", "GLOBAL_Viz_Data", "HPO_Viz_Data", "HPO_LP_Viz_Data", 
+                     "IF_Viz_Data", "IF_LP_Viz_Data", "IT_Viz_Data", "IT_LP_Viz_Data", 
+                     "KIT_Viz_Data", "LW_Viz_Data", "LW_LP_Viz_Data", "MC2_Viz_Data", 
+                     "MC3_Viz_Data", "MC_BK_Viz_Data", "MC_LP_Viz_Data", "MR_Viz_Data", 
+                     "MR_LP_Viz_Data", "NH_Viz_Data", "NH_LP_Viz_Data", "OFF_Viz_Data", 
+                     "OPTO_Viz_Data", "OPTO_LP_Viz_Data", "PA_Viz_Data", "PA_LP_Viz_Data", 
+                     "PC3_Viz_Data", "PC4_Viz_Data", "PC_BK_Viz_Data", "PC_LP_Viz_Data", 
+                     "PHA_Viz_Data", "PHA_LP_Viz_Data", "POPUP_Viz_Data", "PSS_LP_Viz_Data", 
+                     "PT_Viz_Data", "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", 
+                     "WH_Viz_Data", "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
+        version_tracker = {}
+        for dept in dept_list:
+            version_tracker[dept] = BDT.blank_unique_ver_dict(dept)
+        return version_tracker
 
 class VNM: #Verison Name Maker
 
@@ -465,4 +492,25 @@ class Data_fillers:
         return series
     
     def fill_dept_series(device_dicts):
-        series = MDG.build_graph_series()
+        total_device_count = 0
+        version_tracker = MDG.build_unique_ver_tracker()
+        dict_series = MDG.build_graph_series()
+        for device in device_dicts:
+            total_device_count += 1
+            if device_dicts[device]['dept'] != None:
+                dict_series[device_dicts[device]['dept']]['dept_count'] += 1
+                if device_dicts[device]['space'] != None:
+                    if int(device_dicts[device]['space']) <= 25:
+                        dict_series[device_dicts[device]['dept']]['space_count'] += 1
+                if device_dicts[device]['age'] != None:
+                    if device_dicts[device]['age'] <= 1:
+                        dict_series[device_dicts[device]['dept']]['year_1_count'] += 1
+                    if device_dicts[device]['age'] == 2:
+                        dict_series[device_dicts[device]['dept']]['year_2_count'] += 1
+                    if device_dicts[device]['age'] == 3:
+                        dict_series[device_dicts[device]['dept']]['year_3_count'] += 1
+                    if device_dicts[device]['age'] == 4:
+                        dict_series[device_dicts[device]['dept']]['year_4_count'] += 1
+                    if device_dicts[device]['age'] >= 5:
+                        dict_series[device_dicts[device]['dept']]['year_5_count'] += 1
+        return dict_series

@@ -80,7 +80,7 @@ def version(app):
 @bp.route('/graphs', methods=['GET', 'POST'])
 @login_required
 def graphs():
-    #full_device_dict = Abs_Actions.abs_device_get('deviceName', 'MC214DW20')
+    #full_device_dict = Abs_Actions.abs_device_get('deviceName', 'CS351GW22')
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&select=deviceName,localIp,volumes,espInfo.encryptionStatus,systemManufacturer,operatingSystem&agentStatus=A")
     raw_citrix_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
     raw_zoom_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Zoom')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
@@ -88,7 +88,7 @@ def graphs():
     raw_insightvm_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Rapid7')&select=deviceName&pageSize=500&agentStatus=A")    
     all_device_dicts = Data_fillers.fill_device_series(full_device_dict, raw_citrix_data, raw_zoom_data, raw_cortex_data, raw_insightvm_data)
     all_dept_dicts = Data_fillers.fill_dept_series(all_device_dicts)
-    return render_template('graphs.html', title='Graphs', all_device_dicts=all_device_dicts, full_device_dict=full_device_dict)
+    return render_template('graphs.html', title='Graphs', all_device_dicts=all_device_dicts, all_dept_dicts=all_dept_dicts, full_device_dict=full_device_dict)
 
 @bp.route('/get_piechart_data')
 def get_piechart_data():
