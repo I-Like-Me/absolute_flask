@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+    {% for device_dict in all_device_dicts %}
+        <p>{{device_dict}}: {{ all_device_dicts[device_dict] }}</p>
+    {% endfor %}
     <div class="visualization">
         <div id="pieChart"></div>
         <div id="barChart"></div>

@@ -4,7 +4,7 @@ from app.main.forms import RequestForm, AppVerForm
 from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
-from app.main.tool_box import Jsonizers, Dict_Builder, Translators as Tlr
+from app.main.tool_box import Jsonizers, Dict_Builder, MDG, Data_fillers, List_builders, Translators as Tlr
 from app.main.d3_tools import Pie_Tool, Bar_Tool
 from app.main import bp
 import pandas as pd
@@ -61,7 +61,7 @@ def version_check():
         appverforms.version.choices = [(version.id, version.fake_key)for version in Version.query.filter_by(app_id=str(chosen_app.id)).order_by(Version.fake_key.desc()).all()]
         app_data_all = Abs_Actions.app_version_get(Tlr.app_select_tlr(chosen_app.name)[0], Tlr.app_select_tlr(chosen_app.name)[1])
         all_app_versions = Version.query.filter_by(app_id=chosen_app.id).all()
-        clean_version_dict = Dict_Builder.build_version_dict(chosen_app, app_data_all, all_app_versions) # here
+        clean_version_dict = Dict_Builder.build_version_dict(chosen_app, app_data_all, all_app_versions) 
         filtered_version_dict = Tlr.opt_select_tlr(chosen_operator, chosen_version, clean_version_dict)
         return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
     return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
@@ -80,7 +80,15 @@ def version(app):
 @bp.route('/graphs', methods=['GET', 'POST'])
 @login_required
 def graphs():
-    return render_template('graphs.html', title='Graphs')
+    #full_device_dict = Abs_Actions.abs_device_get('deviceName', 'MC214DW20')
+    full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&select=deviceName,localIp,volumes,espInfo.encryptionStatus,systemManufacturer,operatingSystem&agentStatus=A")
+    raw_citrix_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
+    raw_zoom_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Zoom')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
+    raw_cortex_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Cortex')&select=deviceName&pageSize=500&agentStatus=A")
+    raw_insightvm_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Rapid7')&select=deviceName&pageSize=500&agentStatus=A")    
+    all_device_dicts = Data_fillers.fill_device_series(full_device_dict, raw_citrix_data, raw_zoom_data, raw_cortex_data, raw_insightvm_data)
+    all_dept_dicts = Data_fillers.fill_dept_series(all_device_dicts)
+    return render_template('graphs.html', title='Graphs', all_device_dicts=all_device_dicts, full_device_dict=full_device_dict)
 
 @bp.route('/get_piechart_data')
 def get_piechart_data():

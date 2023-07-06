@@ -1,4 +1,5 @@
 from app import library
+from datetime import datetime 
 
 class Jsonizers:
 
@@ -35,8 +36,10 @@ class Dict_Builder:
         clean_data['serial'] = raw_device_data['data'][0]['serialNumber']
         clean_data['ip'] = raw_device_data['data'][0]['localIp']
         for adapter in raw_device_data['data'][0]['networkAdapters']:
-            if 'ipV4Address' in adapter and adapter['ipV4Address'] == clean_data['ip']:
+            if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == clean_data['ip']:
                 clean_data['mac'] = adapter['macAddress']
+            if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == clean_data['ip']:
+                clean_data['mac'] = 'Last connected through VPN.'
         clean_data['connected'] = raw_device_data['data'][0]['lastConnectedDateTimeUtc']
         if 'currentUsername' in raw_device_data['data'][0]:
             clean_data['user'] = raw_device_data['data'][0]['currentUsername']
@@ -112,6 +115,166 @@ class Translators:
                 filtered_dict[ver_key] = ver_val
         return filtered_dict
     
+    def get_age(year_made):
+        int_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        if year_made[-1] in int_list and year_made[-2] in int_list:
+            return int(datetime.today().year) - int('20' + year_made[-2:])
+        else:
+            return None
+    
+    def get_ip(curr_device, raw_device_data):
+        for device in raw_device_data['data']:
+            if device['deviceName'] == curr_device:
+                return device['localIp']
+
+    def get_manufacturer(curr_device, raw_device_data):
+        for device in raw_device_data['data']:
+            if device['deviceName'] == curr_device:
+                return device['systemManufacturer']
+
+    def get_space(curr_device, raw_device_data):
+        for device in raw_device_data['data']:
+            if device['deviceName'] == curr_device:
+                if 'volumes' in device:
+                    for volume in device['volumes']:
+                        if 'driveLetter' in volume and volume['driveLetter'] == 'C:':     
+                            return round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
+    
+    def get_ncr(curr_device, raw_device_data):
+        for device in raw_device_data['data']:
+            if device['deviceName'] == curr_device:
+                if 'espInfo' in device:
+                    if device['espInfo']['encryptionStatus'] == 'USENCR':
+                        return True
+                    if device['espInfo']['encryptionStatus'] == 'ENCR':
+                        return True
+                    if device['espInfo']['encryptionStatus'] == 'SUSP':
+                        return True
+                    if device['espInfo']['encryptionStatus'] == 'UNKN':
+                        return True
+                    if device['espInfo']['encryptionStatus'] == 'INST':
+                        return False
+
+    def get_os_build(curr_device, raw_device_data):
+        for device in raw_device_data['data']:
+            if device['deviceName'] == curr_device:
+                if 'build' in device['operatingSystem']:
+                    return library.product_levels[device['operatingSystem']['build']]
+            
+    def get_citrix_ver(curr_device, raw_data):
+        for app in raw_data['data']:
+            if app['deviceName'] == curr_device:
+                if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
+                    correct_ver_name = VNM.citrix_name_maker(app['appVersion'])
+                    return correct_ver_name
+    
+    def get_zoom_ver(curr_device, raw_data):
+        for app in raw_data['data']:
+            if app['deviceName'] == curr_device:
+                if 'Zoom' in app['appName'] or 'Zoom(32bit)' in app['appName']:
+                    correct_ver_name = VNM.zoom_name_maker(app['appVersion'])
+                    return correct_ver_name
+    
+    def get_cortex(curr_device, raw_data):
+        device_list = []
+        for device in raw_data['data']:
+            device_list.append(device['deviceName'])
+        if curr_device in device_list:
+            return True
+        else:
+            return False
+
+    def get_insightvm(curr_device, raw_data):
+        device_list = []
+        for device in raw_data['data']:
+            device_list.append(device['deviceName'])
+        if curr_device in device_list:
+            return True
+        else:
+            return False
+
+    def get_dept(device_name, device_subnet):
+        dept_global = ["FLORANCE", "CSLA", "BUENOS", "BERLIN", "PRAGUE"]
+        dept_offsite = ["128.122.101", "216.165.95", "128.122.111", "128.122.132", "128.122.226"]
+        dept_lp = {
+            "AD_LP_Viz_Data": 2, 
+            "AI_LP_Viz_Data": 2, 
+            "CS_LP_Viz_Data": 2, 
+            "FAC_LP_Viz_Data": 3, 
+            "FI_LP_Viz_Data": 2, 
+            "HPO_LP_Viz_Data": 3, 
+            "IF_LP_Viz_Data": 2, 
+            "IT_LP_Viz_Data": 2, 
+            "LW_LP_Viz_Data": 2, 
+            "MC_LP_Viz_Data": 2, 
+            "MR_LP_Viz_Data": 2, 
+            "NH_LP_Viz_Data": 2, 
+            "OPTO_LP_Viz_Data": 2, 
+            "PA_LP_Viz_Data": 2, 
+            "PC_LP_Viz_Data": 2, 
+            "PHA_LP_Viz_Data": 3, 
+            "POPUP_Viz_Data": 3, 
+            "PSS_LP_Viz_Data": 3, 
+            "PT_LP_Viz_Data": 2, 
+            "SP_LP_Viz_Data": 2, 
+            "WH_LP_Viz_Data": 2, 
+            "WL_LP_Viz_Data": 2
+            }
+        dept_subnets = {
+            "AD_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "AI_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "COMF_Viz_Data": [4, "128.122.56", "128.122.57", "172.22.56", "172.22.57", "128.122.33", "172.22.33"], 
+            "CS3_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "CS4_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "CS_BK_Viz_Data": [2, "128.122.33", "172.22.33"], 
+            "FAC_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "FI_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "HPO_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"],  
+            "IF_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "IT_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "KIT_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "LW_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "MC2_Viz_Data": [3, "192.168.7"], 
+            "MC3_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "MC_BK_Viz_Data": [2, "128.122.33", "172.22.33"], 
+            "MR_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "NH_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "OPTO_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "PA_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"],  
+            "PC3_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "PC4_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "PC_BK_Viz_Data": [2, "128.122.33", "172.22.33"], 
+            "PHA_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "PT_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "SP_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "WH_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
+            "WL_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"]
+            }
+        
+        for place in dept_global:
+            if place in device_name:
+                return "GLOBAL_Viz_Data"
+        if device_subnet[:10] in dept_offsite:
+            return "OFF_Viz_Data"
+        if device_subnet[:11] in dept_offsite:
+            return "OFF_Viz_Data"
+        for dept in dept_subnets:
+            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:10] in dept_subnets[dept]:
+                return dept
+            if device_name[:dept_subnets[dept][0]] == dept[:dept_subnets[dept][0]] and device_subnet[:11] in dept_subnets[dept]:
+                return dept
+        for dept in dept_lp:
+            if device_name[:dept_lp[dept]] == dept[:dept_lp[dept]]:
+                return dept
+
+class List_builders:
+
+    def full_device_name_list(raw_abs_data):
+        device_name_list = []
+        for device in raw_abs_data['data']:
+            device_name_list.append(device["deviceName"])
+        return device_name_list
+
 class Table_List_Builder:
     
     def build_version_list(app_name, raw_data):
@@ -150,6 +313,78 @@ class Library_Table_Dict_Builders:
                     if correct_ver_name not in unique_library_dict.values():
                         unique_library_dict[correct_ver_name] = app['appVersion']
         return unique_library_dict
+
+class BDT: #Blank Dict Template
+    
+    def blank_graph_dict(graph_dict_name):
+        graph_dict_name = {
+            "space_count": 0,
+            "dept_count": 0,
+            "bit_count": 0,
+            "ctx_ver_count": 0,
+            "zm_ver_count": 0,
+            "wpl_ver_count": 0,
+            "cor_count": 0,
+            "ivm_count": 0,
+            "dell_count": 0,
+            "lenovo_count": 0,
+            "vul_count": 0,
+            "exp_count": 0,
+            "mal_count": 0,
+            "year_1_count": 0,
+            "year_2_count": 0,
+            "year_3_count": 0,
+            "year_4_count": 0,
+            "year_5_count": 0
+        }
+        return graph_dict_name
+    
+    def blank_device_dict(device_dict_name):
+        device_dict_name = {
+            "dept": '', 
+            "space": '',
+            "ncr_status": '',
+            "ip": '',
+            "ctx_ver": '',
+            "zm_ver": '',
+            "wpl_ver": '',
+            "cor": False,
+            "ivm": False,
+            "manufacturer": '',
+            "vul_count": 0,
+            "exp_count": 0,
+            "mal_count": 0,
+            "age": ''
+        }
+        return device_dict_name
+    
+class MDG: #Multi Dict Generator
+    
+    def build_graph_series():
+        series_keys = ["AD_Viz_Data", "AD_LP_Viz_Data", "AI_Viz_Data", "AI_LP_Viz_Data", 
+                       "CONF_Viz_Data", "CS3_Viz_Data", "CS4_Viz_Data", "CS_BK_Viz_Data", 
+                       "CS_LP_Viz_Data", "FAC_Viz_Data", "FAC_LP_Viz_Data", "FI_Viz_Data", 
+                       "FI_LP_Viz_Data", "GLOBAL_Viz_Data", "HPO_Viz_Data", "HPO_LP_Viz_Data", 
+                       "IF_Viz_Data", "IF_LP_Viz_Data", "IT_Viz_Data", "IT_LP_Viz_Data", 
+                       "KIT_Viz_Data", "LW_Viz_Data", "LW_LP_Viz_Data", "MC2_Viz_Data", 
+                       "MC3_Viz_Data", "MC_BK_Viz_Data", "MC_LP_Viz_Data", "MR_Viz_Data", 
+                       "MR_LP_Viz_Data", "NH_Viz_Data", "NH_LP_Viz_Data", "OFF_Viz_Data", 
+                       "OPTO_Viz_Data", "OPTO_LP_Viz_Data", "PA_Viz_Data", "PA_LP_Viz_Data", 
+                       "PC3_Viz_Data", "PC4_Viz_Data", "PC_BK_Viz_Data", "PC_LP_Viz_Data", 
+                       "PHA_Viz_Data", "PHA_LP_Viz_Data", "POPUP_Viz_Data", "PSS_LP_Viz_Data", 
+                       "PT_Viz_Data", "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", 
+                       "WH_Viz_Data", "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
+        graph_series = {}
+        for key in series_keys:
+            graph_series[key] = BDT.blank_graph_dict(key)
+        return graph_series
+    
+    def build_device_series(device_name_list):
+        device_names = device_name_list
+        device_series = {}
+        for name in device_names:
+            device_series[name] = BDT.blank_device_dict(name)
+        return device_series
 
 class VNM: #Verison Name Maker
 
@@ -210,3 +445,24 @@ class VNM: #Verison Name Maker
                 new_ver_name += '0'
             new_ver_name += old_ver[second_fin_idx:]
             return new_ver_name
+        
+class Data_fillers:
+
+    def fill_device_series(device_data, citrix_data, zoom_data, cortex_data, ivm_data):
+        series = MDG.build_device_series(List_builders.full_device_name_list(device_data))
+        for device in series:
+            series[device]['age'] = Translators.get_age(device)
+            series[device]['ip'] = Translators.get_ip(device, device_data)
+            series[device]['dept'] = Translators.get_dept(device, series[device]['ip'])
+            series[device]['space'] = Translators.get_space(device, device_data)
+            series[device]['manufacturer'] = Translators.get_manufacturer(device, device_data)
+            series[device]['ncr_status'] = Translators.get_ncr(device, device_data)
+            series[device]['wpl_ver'] = Translators.get_os_build(device, device_data)
+            series[device]['ctx_ver'] = Translators.get_citrix_ver(device, citrix_data)
+            series[device]['zm_ver'] = Translators.get_zoom_ver(device, zoom_data)
+            series[device]['cor'] = Translators.get_cortex(device, cortex_data)
+            series[device]['ivm'] = Translators.get_insightvm(device, ivm_data)
+        return series
+    
+    def fill_dept_series(device_dicts):
+        series = MDG.build_graph_series()
