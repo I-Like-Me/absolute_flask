@@ -1,5 +1,6 @@
 from app import library
 from datetime import datetime 
+import pandas as pd
 
 class Jsonizers:
 
@@ -88,6 +89,50 @@ class Dict_Builder:
                             version_dict[app['deviceName']] = 'Windows', version.fake_key
         return version_dict
     
+    def dict_for_df(dept_dicts):
+        all_depts_data = {
+            "dept_names": [],
+            "space_counts": [],
+            "dept_counts": [],
+            "bit_counts": [],
+            "ctx_ver_counts": [],
+            "zm_ver_counts": [],
+            "wpl_ver_counts": [],
+            "cor_counts": [],
+            "ivm_counts": [],
+            "dell_counts": [],
+            "lenovo_counts": [],
+            "vul_counts": [],
+            "exp_counts": [],
+            "mal_counts": [],
+            "year_1_counts": [],
+            "year_2_counts": [],
+            "year_3_counts": [],
+            "year_4_counts": [],
+            "year_5_counts": []
+        }
+        for dept in dept_dicts:
+            all_depts_data['dept_names'].append(dept)
+            all_depts_data['space_counts'].append(dept_dicts[dept]['space_count'])
+            all_depts_data['dept_counts'].append(dept_dicts[dept]['dept_count'])
+            all_depts_data['bit_counts'].append(dept_dicts[dept]['bit_count'])
+            all_depts_data['ctx_ver_counts'].append(dept_dicts[dept]['ctx_ver_count'])
+            all_depts_data['zm_ver_counts'].append(dept_dicts[dept]['zm_ver_count'])
+            all_depts_data['wpl_ver_counts'].append(dept_dicts[dept]['wpl_ver_count'])
+            all_depts_data['cor_counts'].append(dept_dicts[dept]['cor_count'])
+            all_depts_data['ivm_counts'].append(dept_dicts[dept]['ivm_count'])
+            all_depts_data['dell_counts'].append(dept_dicts[dept]['dell_count'])
+            all_depts_data['lenovo_counts'].append(dept_dicts[dept]['lenovo_count'])
+            all_depts_data['vul_counts'].append(dept_dicts[dept]['vul_count'])
+            all_depts_data['exp_counts'].append(dept_dicts[dept]['exp_count'])
+            all_depts_data['mal_counts'].append(dept_dicts[dept]['mal_count'])
+            all_depts_data['year_1_counts'].append(dept_dicts[dept]['year_1_count'])
+            all_depts_data['year_2_counts'].append(dept_dicts[dept]['year_2_count'])
+            all_depts_data['year_3_counts'].append(dept_dicts[dept]['year_3_count'])
+            all_depts_data['year_4_counts'].append(dept_dicts[dept]['year_4_count'])
+            all_depts_data['year_5_counts'].append(dept_dicts[dept]['year_5_count'])
+        return all_depts_data
+
 class Translators:
 
     def app_select_tlr(app_choice):
@@ -544,3 +589,4 @@ class Data_fillers:
                         dict_series[device_dicts[device]['dept']]['wpl_ver_count'] += 1
                         version_tracker[device_dicts[device]['dept']]['build'].append(device_dicts[device]['wpl_ver'])    
         return dict_series
+    

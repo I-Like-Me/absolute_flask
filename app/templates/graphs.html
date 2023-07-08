@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 
-{% block app_content %}
-    {% for dept_dict in all_dept_dicts %}
-        <p>{{dept_dict}}: {{ all_dept_dicts[dept_dict] }}</p>
-    {% endfor %}
+{% block app_content %}  
     <div class="visualization">
         <div id="pieChart"></div>
         <div id="barChart"></div>

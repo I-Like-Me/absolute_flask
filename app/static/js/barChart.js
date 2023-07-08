@@ -1,6 +1,6 @@
 //Set up SVG dimensions and properties
 const margin = {top: 20, right: 10, bottom: 20, left: 20},
-width = 350 - margin.left - margin.right,
+width = 1200 - margin.left - margin.right,
 height = 350 - margin.top - margin.bottom,
 barPadding = 5,
 graph_misc = {ylabel: 4, xlabelH : 5, title:9};
