@@ -2,6 +2,19 @@ from flask import jsonify
 import numpy as np
 import pandas as pd
 
+class Loopers:
+
+    def age_dept_loop(age_data, dept_data):
+        count = 0
+        year_n_percent = []
+        while count != 51:
+            if age_data.values[count] == 0 and dept_data.values[count] == 0:
+                year_n_percent.append(0.0)
+            else:
+                year_n_percent.append(Viz_Data.calculate_percentage(age_data.values[count], np.sum(dept_data.values[count])))
+            count += 1
+        return year_n_percent
+
 class Viz_Data:
 
     def calculate_percentage(val, total):
@@ -20,15 +33,23 @@ class Viz_Data:
 
 class Pie_Tool:
     def piechart_data(viz_data_df):
-        space_labels = ['under 25 GB', 'over 25 GB']
-        _ = viz_data_df.groupby('space_counts').size()
-        reverse = np.sum(_.values) - _.values[0]
-        class_percent = []
-        class_percent.append(Viz_Data.calculate_percentage(reverse, np.sum(_.values)))
-        class_percent.append(Viz_Data.calculate_percentage(_.values[0], np.sum(_.values)))
+        age_labels = ['Y<=1', 'Y==2', 'Y==3', 'Y==4', 'Y>=5']
+        y1_lst = viz_data_df['year_1_counts'].values
+        _1 = np.sum(y1_lst)
+        y2_lst = viz_data_df['year_2_counts'].values
+        _2 = np.sum(y2_lst)
+        y3_lst = viz_data_df['year_3_counts'].values
+        _3 = np.sum(y3_lst)
+        y4_lst = viz_data_df['year_4_counts'].values
+        _4 = np.sum(y4_lst)
+        y5_lst = viz_data_df['year_5_counts'].values
+        _5 = np.sum(y5_lst)
+        _ = [_1, _2, _3, _4, _5]
+        class_percent = Viz_Data.calculate_percentage(_, np.sum(_))
         
         piechart_data= []
-        Viz_Data.data_creation(piechart_data, class_percent, space_labels)
+        
+        Viz_Data.data_creation(piechart_data, class_percent, age_labels)
         return (piechart_data)
     
 class Bar_Tool:
@@ -48,19 +69,25 @@ class Bar_Tool:
                        "PT_Viz_Data", "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", 
                        "WH_Viz_Data", "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
         viz_data_df['dept_group'] = pd.cut(viz_data_df.dept_ids, range(50, 2651, 50), labels=dept_lables)
-        select_df = viz_data_df[['dept_group','space_counts', 'dept_counts']]
-        over_25 = select_df[select_df['space_counts'] == 0]
-        under_25 = select_df[select_df['space_counts'] != 0]
-        full_count = select_df[select_df['space_counts'] != None]
-        _ = full_count['dept_counts'].values
-        over_percent = Viz_Data.calculate_percentage(_, np.sum(_))
-        _ = full_count['dept_counts'].values
-        under_percent = Viz_Data.calculate_percentage(_, np.sum(_))
-        _ = full_count['dept_counts'].values
-        all_percent = Viz_Data.calculate_percentage(_, np.sum(_))
+        select_df = viz_data_df[['dept_group','year_1_counts', 'year_2_counts', 'year_3_counts', 'year_4_counts', 'year_5_counts', 'dept_counts']]
+        year_1 = select_df['year_1_counts']
+        year_2 = select_df['year_2_counts']
+        year_3 = select_df['year_3_counts']
+        year_4 = select_df['year_4_counts']
+        year_5 = select_df['year_5_counts']
+        departments = select_df['dept_counts']
+        
+        year_1_percent = Loopers.age_dept_loop(year_1, departments)
+        year_2_percent = Loopers.age_dept_loop(year_2, departments)
+        year_3_percent = Loopers.age_dept_loop(year_3, departments)
+        year_4_percent = Loopers.age_dept_loop(year_4, departments)
+        year_5_percent = Loopers.age_dept_loop(year_5, departments)
        
         barchart_data = []
-        Viz_Data.data_creation(barchart_data,all_percent, dept_lables, "All")
-        Viz_Data.data_creation(barchart_data,under_percent, dept_lables, "under 25 GB")
-        Viz_Data.data_creation(barchart_data,over_percent, dept_lables, "over 25 GB")
+        Viz_Data.data_creation(barchart_data,year_1_percent, dept_lables, "All")
+        Viz_Data.data_creation(barchart_data,year_1_percent, dept_lables, "Y<=1")
+        Viz_Data.data_creation(barchart_data,year_2_percent, dept_lables, "Y==2")
+        Viz_Data.data_creation(barchart_data,year_3_percent, dept_lables, "Y==3")
+        Viz_Data.data_creation(barchart_data,year_4_percent, dept_lables, "Y==4")
+        Viz_Data.data_creation(barchart_data,year_5_percent, dept_lables, "Y>=5")
         return (barchart_data)
