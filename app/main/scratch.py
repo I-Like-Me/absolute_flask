@@ -52,10 +52,12 @@ class Bar_Tool:
         over_25 = select_df[select_df['space_counts'] == 0]
         under_25 = select_df[select_df['space_counts'] != 0]
         full_count = select_df[select_df['space_counts'] != None]
-        _ = full_count['dept_counts'].values
-        over_percent = Viz_Data.calculate_percentage(_, np.sum(_))
-        _ = full_count['dept_counts'].values
-        under_percent = Viz_Data.calculate_percentage(_, np.sum(_))
+        _1 = over_25.groupby('space_counts').size().values
+        _2 = over_25.groupby('dept_counts').size().values
+        over_percent = Viz_Data.calculate_percentage(_1, _2)
+        _1 = under_25.groupby('dept_counts').size().values
+        _2 = under_25.groupby('dept_counts').size().values
+        under_percent = Viz_Data.calculate_percentage(_1, _2)
         _ = full_count['dept_counts'].values
         all_percent = Viz_Data.calculate_percentage(_, np.sum(_))
        

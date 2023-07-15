@@ -109,7 +109,8 @@ class Dict_Builder:
             "year_2_counts": [],
             "year_3_counts": [],
             "year_4_counts": [],
-            "year_5_counts": []
+            "year_5_counts": [],
+            "dept_ids": []
         }
         for dept in dept_dicts:
             all_depts_data['dept_names'].append(dept)
@@ -131,6 +132,7 @@ class Dict_Builder:
             all_depts_data['year_3_counts'].append(dept_dicts[dept]['year_3_count'])
             all_depts_data['year_4_counts'].append(dept_dicts[dept]['year_4_count'])
             all_depts_data['year_5_counts'].append(dept_dicts[dept]['year_5_count'])
+            all_depts_data['dept_ids'].append(dept_dicts[dept]['dept_id'])
         return all_depts_data
 
 class Translators:
@@ -361,7 +363,7 @@ class Library_Table_Dict_Builders:
 
 class BDT: #Blank Dict Template
     
-    def blank_graph_dict(graph_dict_name):
+    def blank_graph_dict(graph_dict_name, unique_id):
         graph_dict_name = {
             "space_count": 0,
             "dept_count": 0,
@@ -380,7 +382,8 @@ class BDT: #Blank Dict Template
             "year_2_count": 0,
             "year_3_count": 0,
             "year_4_count": 0,
-            "year_5_count": 0
+            "year_5_count": 0,
+            "dept_id": unique_id
         }
         return graph_dict_name
     
@@ -427,9 +430,13 @@ class MDG: #Multi Dict Generator
                        "PHA_Viz_Data", "PHA_LP_Viz_Data", "POPUP_Viz_Data", "PSS_LP_Viz_Data", 
                        "PT_Viz_Data", "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", 
                        "WH_Viz_Data", "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
+        unique_dept_ids = []
+        full_range = range(51, 2651, 50)
+        for dept_id in full_range:
+            unique_dept_ids.append(dept_id)
         graph_series = {}
-        for key in series_keys:
-            graph_series[key] = BDT.blank_graph_dict(key)
+        for (key, ids) in zip(series_keys, unique_dept_ids):
+            graph_series[key] = BDT.blank_graph_dict(key, ids)
         return graph_series
     
     def build_device_series(device_name_list):

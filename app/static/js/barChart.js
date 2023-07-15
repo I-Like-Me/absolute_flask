@@ -1,8 +1,8 @@
 //Set up SVG dimensions and properties
 const margin = {top: 20, right: 10, bottom: 20, left: 20},
 width = 1200 - margin.left - margin.right,
-height = 350 - margin.top - margin.bottom,
-barPadding = 5,
+height = 320 - margin.top - margin.bottom,
+barPadding = 10,
 graph_misc = {ylabel: 4, xlabelH : 5, title:9};
 
 // Setting the default group
@@ -84,7 +84,7 @@ function d3BarChart(datasetBarChart){
    const xLabels = bar
        .append("g")
        .attr("transform", "translate(" + margin.left + "," + (margin.top + height + graph_misc.xlabelH)  + ")");
-
+  
    xLabels.selectAll("text.xAxis")
        .data(defaultBarChart)
        .enter()
