@@ -5,13 +5,14 @@
         <div id="pieChart"></div>
         <div id="barChart"></div>
     </div>
+    
 {% endblock %}
 
 {% block scripts %}
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
-        const pieChartDataUrl = "{{ url_for('main.get_piechart_data') }}";
-        const barChartDataUrl = "{{ url_for('main.get_barchart_data') }}";
+        const pieChartDataUrl = "{{ url_for('main.get_piechart_data') }}"; // <--- app/main/routes.py --def get_piechart_data():--
+        const barChartDataUrl = "{{ url_for('main.get_barchart_data') }}"; // <--- app/main/routes.py --def get_barchart_data():--
     </script>
     <script src="{{ url_for('static', filename='js/pieChart.js') }}"></script>
     <script src="{{ url_for('static', filename='js/barChart.js') }}"></script>

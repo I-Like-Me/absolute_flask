@@ -1,4 +1,4 @@
-//Set up SVG dimensions and properties
+ //Set up SVG dimensions and properties
 const margin = {top: 30, right: 10, bottom: 20, left: 20},
 width = 1200 - margin.left - margin.right,
 height = 320 - margin.top - margin.bottom,

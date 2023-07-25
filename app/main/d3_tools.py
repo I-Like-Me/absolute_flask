@@ -76,7 +76,7 @@ class Bar_Tool:
         year_4 = select_df['year_4_counts']
         year_5 = select_df['year_5_counts']
         departments = select_df['dept_counts']
-        
+
         year_1_percent = Loopers.age_dept_loop(year_1, departments)
         year_2_percent = Loopers.age_dept_loop(year_2, departments)
         year_3_percent = Loopers.age_dept_loop(year_3, departments)
