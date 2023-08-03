@@ -1,32 +1,22 @@
 from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
-from app import db
 from app.main.forms import RequestForm, AppVerForm
 from flask_login import current_user, login_required
 from app.models import User, App, Version
 from app.main.absolute_api import Abs_Actions
-from app.main.tool_box import Jsonizers, Dict_Builder, MDG, Data_fillers, List_builders, Translators as Tlr
-from app.main.d3_tools import Pie_Tool, Bar_Tool
+from app.main.tool_box import Jsonizers, Dict_Builder, Translators as Tlr
 from app.main import bp
 import pandas as pd
+from bokeh.embed import server_document
 
-full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&select=deviceName,localIp,volumes,espInfo.encryptionStatus,systemManufacturer,operatingSystem&agentStatus=A")
-raw_citrix_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
-raw_zoom_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Zoom')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
-raw_cortex_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Cortex')&select=deviceName&pageSize=500&agentStatus=A")
-raw_insightvm_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Rapid7')&select=deviceName&pageSize=500&agentStatus=A")    
-all_device_dicts = Data_fillers.fill_device_series(full_device_dict, raw_citrix_data, raw_zoom_data, raw_cortex_data, raw_insightvm_data)
-all_dept_dicts = Data_fillers.fill_dept_series(all_device_dicts)
-all_depts_data = Dict_Builder.dict_for_df(all_dept_dicts)
-df = pd.DataFrame(all_depts_data)
 
 @bp.route('/')
 @bp.route('/index')
-@login_required
+#@login_required
 def index():
     return render_template('index.html', title='Workbench')
 
 @bp.route('/requests', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def requests():
     form = RequestForm()
     device_results = Abs_Actions.abs_device_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
@@ -44,7 +34,7 @@ def requests():
     return render_template('requests.html', title='Requests', form=form, device_results=device_results, results_dict=results_dict, app_results=app_results, s_type=request.args.get('s_type'), s_keyword=request.args.get('s_keyword'))
 
 @bp.route('/space_check', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def space_check():
     return render_template('space_check.html', title='Space Checker')
 
@@ -55,7 +45,7 @@ def space_data():
     return {'data': [Jsonizers.space_json(key, value) for key, value in space_dict.items()]}
 
 @bp.route('/version_check', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def version_check():
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
@@ -84,19 +74,10 @@ def version(app):
         versionList.append(versionObj)
     return jsonify({'versions' : versionList})
 
-@bp.route('/graphs', methods=['GET', 'POST'])
-@login_required
+@bp.route('/graphs/', methods=['GET', 'POST'])
+#@login_required
 def graphs():
-    return render_template('graphs.html', title='Graphs')
+    script = server_document('http://127.0.0.1:5006/absolute_bokeh')
+    return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
-# Passes Pie python data to Javascript
-@bp.route('/get_piechart_data')
-def get_piechart_data(): # ---> app/templates/graphs.html --"{{ url_for('main.get_piechart_data') }}"--
-    piechart_data = Pie_Tool.piechart_data(df) 
-    return jsonify(piechart_data)
 
-# Passes Bar python data to Javascript
-@bp.route('/get_barchart_data')
-def get_barchart_data(): # ---> app/templates/graphs.html --"{{ url_for('main.get_barchart_data') }}"--
-    barchart_data = Bar_Tool.barchart_data(df)
-    return jsonify(barchart_data)

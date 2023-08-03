@@ -9,3 +9,5 @@ app.db
 logs/workbench.log
 logs/workbench.log.1
 app/static/data/test_data.csv
+logs/workbench.log.2
+logs/workbench.log.3
