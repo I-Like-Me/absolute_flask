@@ -68,7 +68,7 @@ f_types = {
 
 class B_Getter:
     def get_dataset(src, d_type, f_type):
-        #breakpoint()
+
         group_dict = {"dept_names": [], "space_counts": [], "dept_counts": [], "bit_counts": [],
                       "ctx_ver_counts": [], "zm_ver_counts": [], "wpl_ver_counts": [], "cor_counts": [],
                       "ivm_counts": [], "dell_counts": [], "lenovo_counts": [], "vul_counts": [], 
@@ -87,6 +87,18 @@ class B_Getter:
         dept_names = prepped_df.dept_names.values.tolist()
         data_counts = prepped_df[d_type].values.tolist()
         return ColumnDataSource(data=dict(dept_names=dept_names, data_counts=data_counts))
+
+#        for name in display_names:
+#            group_dict['dept_names'].append(name)
+#            cur_group = df.loc[(src[f_type] == 'yes') & (src['dept_group_tag'] == name)]
+#            cur_group = cur_group.drop(['dept_names', 'dept_group_tag', 'filter_lp', 'filter_726', 'filter_bk', 'filter_third_floor', 'filter_fourth_floor', 'filter_second_floor', 'filter_all'], axis=1)
+#            cur_group = cur_group.sum()
+#            for key, val in cur_group.items():
+#                group_dict[key].append(val)
+#        prepped_df = pd.DataFrame(group_dict)    
+#        dept_names = prepped_df.dept_names.values.tolist()
+#        data_counts = prepped_df[d_type].values.tolist()
+#        return ColumnDataSource(data=dict(dept_names=dept_names, data_counts=data_counts))
  
 class B_Maker:
     def make_plot(source, title):
@@ -101,6 +113,7 @@ class B_Maker:
 class B_Updater:
     def update_plot(attrname, old, new):
         d_type = d_type_select.value
+        f_type = f_type_select.value
         plot.title.text = "Data for " + d_types[d_type]['title']
 
         src = B_Getter.get_dataset(df, d_types[d_type]['data_id'], f_types[f_type]['filter_id'])
@@ -114,6 +127,7 @@ source = B_Getter.get_dataset(df, d_types[d_type]['data_id'], f_types[f_type]['f
 plot = B_Maker.make_plot(source, "Number of " + d_types[d_type]['title'])  
 
 d_type_select.on_change('value', B_Updater.update_plot)
+f_type_select.on_change('value', B_Updater.update_plot)
 
 
 controls = column(d_type_select, f_type_select)
