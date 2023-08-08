@@ -7,13 +7,9 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
-import subprocess
-import atexit
 import logging
 import os
-from flask_sock import Sock
 
-sock = Sock()
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
@@ -39,8 +35,7 @@ def create_app(config_class=Config):
     login.init_app(app)
     bootstrap.init_app(app)
     moment.init_app(app)
-    sock.init_app(app)
-    
+
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 

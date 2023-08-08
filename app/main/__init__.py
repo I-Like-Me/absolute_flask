@@ -2,4 +2,4 @@ from flask import Blueprint
 
 bp = Blueprint('main', __name__)
 
-from app.main import routes, absolute_api, bokeh_tools
+from app.main import routes, absolute_api

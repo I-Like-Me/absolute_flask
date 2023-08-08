@@ -110,8 +110,16 @@ class Dict_Builder:
             "year_3_counts": [],
             "year_4_counts": [],
             "year_5_counts": [],
-            "dept_ids": []
+            "dept_group_tag": [],
+            "filter_lp": [],
+            "filter_bk": [],
+            "filter_second_floor": [],
+            "filter_third_floor": [],
+            "filter_fourth_floor": [],
+            "filter_726": [],
+            "filter_all": [],
         }
+        
         for dept in dept_dicts:
             all_depts_data['dept_names'].append(dept)
             all_depts_data['space_counts'].append(dept_dicts[dept]['space_count'])
@@ -132,7 +140,14 @@ class Dict_Builder:
             all_depts_data['year_3_counts'].append(dept_dicts[dept]['year_3_count'])
             all_depts_data['year_4_counts'].append(dept_dicts[dept]['year_4_count'])
             all_depts_data['year_5_counts'].append(dept_dicts[dept]['year_5_count'])
-            all_depts_data['dept_ids'].append(dept_dicts[dept]['dept_id'])
+            all_depts_data["dept_group_tag"].append(Data_fillers.dept_group_tagger(dept))
+            all_depts_data["filter_lp"].append(Data_fillers.filter_laptops_tagger(dept))
+            all_depts_data["filter_bk"].append(Data_fillers.filter_brooklyn_tagger(dept))
+            all_depts_data["filter_726"].append(Data_fillers.filter_726_tagger(dept))
+            all_depts_data["filter_second_floor"].append(Data_fillers.filter_2_floor_tagger(dept))
+            all_depts_data["filter_third_floor"].append(Data_fillers.filter_3_floor_tagger(dept))
+            all_depts_data["filter_fourth_floor"].append(Data_fillers.filter_4_floor_tagger(dept))
+            all_depts_data["filter_all"].append('yes')
         return all_depts_data
 
 class Translators:
@@ -270,7 +285,10 @@ class Translators:
         dept_subnets = {
             "AD_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
             "AI_Viz_Data": [2, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
-            "COMF_Viz_Data": [4, "128.122.56", "128.122.57", "172.22.56", "172.22.57", "128.122.33", "172.22.33"], 
+            "COMF2_Viz_Data": [5, "192.168.7"],
+            "COMF3_Viz_Data": [5, "128.122.56", "128.122.57", "172.22.56", "172.22.57"],
+            "COMF4_Viz_Data": [5, "128.122.56", "128.122.57", "172.22.56", "172.22.57"],
+            "COMF_BK_Viz_Data": [4, "128.122.33", "172.22.33"],
             "CS3_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
             "CS4_Viz_Data": [3, "128.122.56", "128.122.57", "172.22.56", "172.22.57"], 
             "CS_BK_Viz_Data": [2, "128.122.33", "172.22.33"], 
@@ -363,7 +381,7 @@ class Library_Table_Dict_Builders:
 
 class BDT: #Blank Dict Template
     
-    def blank_graph_dict(graph_dict_name, unique_id):
+    def blank_graph_dict(graph_dict_name):
         graph_dict_name = {
             "space_count": 0,
             "dept_count": 0,
@@ -382,8 +400,7 @@ class BDT: #Blank Dict Template
             "year_2_count": 0,
             "year_3_count": 0,
             "year_4_count": 0,
-            "year_5_count": 0,
-            "dept_id": unique_id
+            "year_5_count": 0
         }
         return graph_dict_name
     
@@ -418,25 +435,22 @@ class MDG: #Multi Dict Generator
     
     def build_graph_series():
         series_keys = ["AD_Viz_Data", "AD_LP_Viz_Data", "AI_Viz_Data", "AI_LP_Viz_Data", 
-                       "CONF_Viz_Data", "CS3_Viz_Data", "CS4_Viz_Data", "CS_BK_Viz_Data", 
-                       "CS_LP_Viz_Data", "FAC_Viz_Data", "FAC_LP_Viz_Data", "FI_Viz_Data", 
-                       "FI_LP_Viz_Data", "GLOBAL_Viz_Data", "HPO_Viz_Data", "HPO_LP_Viz_Data", 
-                       "IF_Viz_Data", "IF_LP_Viz_Data", "IT_Viz_Data", "IT_LP_Viz_Data", 
-                       "KIT_Viz_Data", "LW_Viz_Data", "LW_LP_Viz_Data", "MC2_Viz_Data", 
-                       "MC3_Viz_Data", "MC_BK_Viz_Data", "MC_LP_Viz_Data", "MR_Viz_Data", 
-                       "MR_LP_Viz_Data", "NH_Viz_Data", "NH_LP_Viz_Data", "OFF_Viz_Data", 
-                       "OPTO_Viz_Data", "OPTO_LP_Viz_Data", "PA_Viz_Data", "PA_LP_Viz_Data", 
-                       "PC3_Viz_Data", "PC4_Viz_Data", "PC_BK_Viz_Data", "PC_LP_Viz_Data", 
-                       "PHA_Viz_Data", "PHA_LP_Viz_Data", "POPUP_Viz_Data", "PSS_LP_Viz_Data", 
-                       "PT_Viz_Data", "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", 
-                       "WH_Viz_Data", "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
-        unique_dept_ids = []
-        full_range = range(51, 2651, 50)
-        for dept_id in full_range:
-            unique_dept_ids.append(dept_id)
+                       "CONF2_Viz_Data", "CONF3_Viz_Data", "CONF4_Viz_Data", "CONF_BK_Viz_Data", 
+                       "CS3_Viz_Data", "CS4_Viz_Data", "CS_BK_Viz_Data", "CS_LP_Viz_Data", 
+                       "FAC_Viz_Data", "FAC_LP_Viz_Data", "FI_Viz_Data", "FI_LP_Viz_Data", 
+                       "GLOBAL_Viz_Data", "HPO_Viz_Data", "HPO_LP_Viz_Data", "IF_Viz_Data", 
+                       "IF_LP_Viz_Data", "IT_Viz_Data", "IT_LP_Viz_Data", "KIT_Viz_Data", 
+                       "LW_Viz_Data", "LW_LP_Viz_Data", "MC2_Viz_Data", "MC3_Viz_Data", 
+                       "MC_BK_Viz_Data", "MC_LP_Viz_Data", "MR_Viz_Data", "MR_LP_Viz_Data", 
+                       "NH_Viz_Data", "NH_LP_Viz_Data", "OFF_Viz_Data", "OPTO_Viz_Data", 
+                       "OPTO_LP_Viz_Data", "PA_Viz_Data", "PA_LP_Viz_Data", "PC3_Viz_Data", 
+                       "PC4_Viz_Data", "PC_BK_Viz_Data", "PC_LP_Viz_Data", "PHA_Viz_Data", 
+                       "PHA_LP_Viz_Data", "POPUP_Viz_Data", "PSS_LP_Viz_Data", "PT_Viz_Data", 
+                       "PT_LP_Viz_Data", "SP_Viz_Data", "SP_LP_Viz_Data", "WH_Viz_Data", 
+                       "WH_LP_Viz_Data", "WL_Viz_Data", "WL_LP_Viz_Data"]
         graph_series = {}
-        for (key, ids) in zip(series_keys, unique_dept_ids):
-            graph_series[key] = BDT.blank_graph_dict(key, ids)
+        for key in series_keys:
+            graph_series[key] = BDT.blank_graph_dict(key)
         return graph_series
     
     def build_device_series(device_name_list):
@@ -596,4 +610,99 @@ class Data_fillers:
                         dict_series[device_dicts[device]['dept']]['wpl_ver_count'] += 1
                         version_tracker[device_dicts[device]['dept']]['build'].append(device_dicts[device]['wpl_ver'])    
         return dict_series
+    
+    def dept_group_tagger(dept):
+        dept_tags = {'Admin': ['AD_Viz_Data', 'AD_LP_Viz_Data'],
+                     'Allergy': ['AI_Viz_Data', 'AI_LP_Viz_Data'],
+                     'Conference': ['CONF2_Viz_Data', 'CONF3_Viz_Data', 'CONF4_Viz_Data', 'CONF_BK_Viz_Data'],
+                     'Counseling': ['CS3_Viz_Data', 'CS4_Viz_Data', 'CS_BK_Viz_Data', 'CS_LP_Viz_Data'], 
+                     'Facilities': ['FAC_Viz_Data', 'FAC_LP_Viz_Data'],
+                     'Finance': ['FI_Viz_Data', 'FI_LP_Viz_Data'], 
+                     'Global': ['GLOBAL_Viz_Data'],
+                     'HPO':['HPO_Viz_Data', 'HPO_LP_Viz_Data'],
+                     'Informatics': ['IF_Viz_Data', 'IF_LP_Viz_Data'], 
+                     'IT': ['IT_Viz_Data', 'IT_LP_Viz_Data'], 
+                     'Kitchen': ['KIT_Viz_Data'], 
+                     'LiveWell': ['LW_Viz_Data', 'LW_LP_Viz_Data'], 
+                     'Medical Records': ['MR_Viz_Data', 'MR_LP_Viz_Data'], 
+                     'Moses': ['MC2_Viz_Data', 'MC3_Viz_Data', 'MC_BK_Viz_Data', 'MC_LP_Viz_Data'], 
+                     'Nursing Hub': ['NH_Viz_Data', 'NH_LP_Viz_Data'], 
+                     'OffSite': ['OFF_Viz_Data'], 
+                     'Optometry': ['OPTO_Viz_Data', 'OPTO_LP_Viz_Data'], 
+                     'Patient Accounts': ['PA_Viz_Data', 'PA_LP_Viz_Data'], 
+                     'Pharmacy': ['PHA_Viz_Data', 'PHA_LP_Viz_Data'], 
+                     'Popup Clinic': ['POPUP_Viz_Data'], 
+                     'Primary Care': ['PC3_Viz_Data', 'PC4_Viz_Data', 'PC_BK_Viz_Data', 'PC_LP_Viz_Data'], 
+                     'PSS': ['PSS_LP_Viz_Data'], 
+                     'PT': ['PT_Viz_Data', 'PT_LP_Viz_Data'], 
+                     'Specialty': ['SP_Viz_Data', 'SP_LP_Viz_Data'], 
+                     'Wellness': ['WL_Viz_Data', 'WL_LP_Viz_Data'], 
+                     'Womens Health': ['WH_Viz_Data', 'WH_LP_Viz_Data']}
+        
+        for tag in dept_tags:
+            if dept in dept_tags[tag]:
+                return tag
+                
+    def filter_laptops_tagger(dept):
+        laptop_depts = ['AD_LP_Viz_Data', 'AI_LP_Viz_Data', 'CS_LP_Viz_Data', 'FAC_LP_Viz_Data',
+                        'FI_LP_Viz_Data', 'HPO_LP_Viz_Data', 'IF_LP_Viz_Data', 'IT_LP_Viz_Data',
+                        'LW_LP_Viz_Data', 'MR_LP_Viz_Data', 'MC_LP_Viz_Data', 'NH_LP_Viz_Data',
+                        'OPTO_LP_Viz_Data', 'PA_LP_Viz_Data', 'PHA_LP_Viz_Data', 'PC_LP_Viz_Data',
+                        'PT_LP_Viz_Data', 'SP_LP_Viz_Data', 'WL_LP_Viz_Data', 'WH_LP_Viz_Data']
+        
+        if dept in laptop_depts:
+            return 'yes'
+        else:
+            return 'no'
+    
+    def filter_brooklyn_tagger(dept):
+        brooklyn_depts = ['CONF_BK_Viz_Data', 'CS_BK_Viz_Data', 'MC_BK_Viz_Data', 'PC_BK_Viz_Data']
+        
+        if dept in brooklyn_depts:
+            return 'yes'
+        else:
+            return 'no'
+
+    def filter_726_tagger(dept):
+        all_726_depts = ["AD_Viz_Data", "AI_Viz_Data", "CONF2_Viz_Data", "CONF3_Viz_Data", 
+                         "CONF4_Viz_Data", "CS3_Viz_Data", "CS4_Viz_Data", "FAC_Viz_Data", 
+                         "FI_Viz_Data", "HPO_Viz_Data", "IF_Viz_Data", "IT_Viz_Data", 
+                         "KIT_Viz_Data", "LW_Viz_Data", "MC2_Viz_Data", "MC3_Viz_Data", 
+                         "MR_Viz_Data", "NH_Viz_Data", "OPTO_Viz_Data", "PA_Viz_Data", 
+                         "PC3_Viz_Data", "PC4_Viz_Data", "PHA_Viz_Data", "PT_Viz_Data", 
+                         "SP_Viz_Data", "WH_Viz_Data", "WL_Viz_Data"]
+        
+        if dept in all_726_depts:
+            return 'yes'
+        else:
+            return 'no'
+    
+    def filter_2_floor_tagger(dept):
+        second_floor_depts = ["CONF2_Viz_Data", "MC2_Viz_Data"]
+        
+        if dept in second_floor_depts:
+            return 'yes'
+        else:
+            return 'no'
+
+    def filter_3_floor_tagger(dept):
+        third_floor_depts = ["AI_Viz_Data", "CONF3_Viz_Data", "CS3_Viz_Data", "FAC_Viz_Data", 
+                             "IF_Viz_Data", "IT_Viz_Data", "KIT_Viz_Data", "MC3_Viz_Data", 
+                             "MR_Viz_Data", "NH_Viz_Data", "PA_Viz_Data", "PC3_Viz_Data", 
+                             "SP_Viz_Data", "WL_Viz_Data"]
+        
+        if dept in third_floor_depts:
+            return 'yes'
+        else:
+            return 'no'
+
+    def filter_4_floor_tagger(dept):
+        fourth_floor_depts = ["AD_Viz_Data", "CONF4_Viz_Data", "CS4_Viz_Data", "FI_Viz_Data", 
+                              "HPO_Viz_Data", "LW_Viz_Data", "OPTO_Viz_Data", "PC4_Viz_Data", 
+                              "PHA_Viz_Data", "PT_Viz_Data", "WH_Viz_Data"]
+        
+        if dept in fourth_floor_depts:
+            return 'yes'
+        else:
+            return 'no'
     
