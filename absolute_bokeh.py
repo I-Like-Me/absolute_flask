@@ -38,6 +38,54 @@ d_types = {
     'bitlock': {
         'data_id': 'bit_counts',
         'title': 'devices that are encripted'
+    },
+    'citrix': {
+        'data_id': 'ctx_ver_counts',
+        'title': 'different Citrix versions'
+    },
+    'zoom': {
+        'data_id': 'zm_ver_counts',
+        'title': 'different Zoom versions'
+    },
+    'Windows': {
+        'data_id': 'wpl_ver_counts',
+        'title': 'different Windows build levels'
+    },
+    'Dell': {
+        'data_id': 'dell_counts',
+        'title': 'Dell machines'
+    },
+    'Lenovo': {
+        'data_id': 'lenovo_counts',
+        'title': 'Lenovo machines'
+    },
+    'Cortex': {
+        'data_id': 'cor_counts',
+        'title': 'machines with Cortex'
+    },
+    'Insight VM': {
+        'data_id': 'ivm_counts',
+        'title': 'machines with Insight VM'
+    },
+    '1 Year': {
+        'data_id': 'year_1_counts',
+        'title': 'machines one year old or less'
+    },
+    '2 Year': {
+        'data_id': 'year_2_counts',
+        'title': 'machines 2 years old'
+    },
+    '3 Year': {
+        'data_id': 'year_3_counts',
+        'title': 'machines 3 years old'
+    },
+    '4 Year': {
+        'data_id': 'year_4_counts',
+        'title': 'machines 4 years old'
+    },
+    '5 Year': {
+        'data_id': 'year_5_counts',
+        'title': 'machines 5 years old or more'
     }
 }
 
@@ -88,21 +136,12 @@ class B_Getter:
         data_counts = prepped_df[d_type].values.tolist()
         return ColumnDataSource(data=dict(dept_names=dept_names, data_counts=data_counts))
 
-#        for name in display_names:
-#            group_dict['dept_names'].append(name)
-#            cur_group = df.loc[(src[f_type] == 'yes') & (src['dept_group_tag'] == name)]
-#            cur_group = cur_group.drop(['dept_names', 'dept_group_tag', 'filter_lp', 'filter_726', 'filter_bk', 'filter_third_floor', 'filter_fourth_floor', 'filter_second_floor', 'filter_all'], axis=1)
-#            cur_group = cur_group.sum()
-#            for key, val in cur_group.items():
-#                group_dict[key].append(val)
-#        prepped_df = pd.DataFrame(group_dict)    
-#        dept_names = prepped_df.dept_names.values.tolist()
-#        data_counts = prepped_df[d_type].values.tolist()
-#        return ColumnDataSource(data=dict(dept_names=dept_names, data_counts=data_counts))
- 
+ToolTips = [('Name', '@dept_names'), ('Count', '@data_counts')] 
+
 class B_Maker:
+    
     def make_plot(source, title):
-        plot = figure(y_range=display_names, height=700, toolbar_location=None)
+        plot = figure(y_range=display_names, height=700, tools="hover", tooltips=ToolTips, toolbar_location=None)
         plot.title.text = title
         plot.hbar(y='dept_names', right='data_counts', height=0.3, source=source)
         plot.ygrid.grid_line_color = None
