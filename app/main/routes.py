@@ -16,22 +16,14 @@ def index():
     return render_template('index.html', title='Workbench')
 
 @bp.route('/requests', methods=['GET', 'POST'])
-#@login_required
 def requests():
-    form = RequestForm()
-    device_results = Abs_Actions.abs_device_get(keyword_choice=request.args.get('s_keyword'), keyword_type_choice=request.args.get('s_type'))
-    app_results = Abs_Actions.abs_app_get(keyword_choice=request.args.get('s_keyword'))
-    bitkey = Abs_Actions.abs_device_bitkey(device_results['data'][0]['deviceUid'])
-    results_dict = Dict_Builder.build_machine_dict(device_results, app_results, bitkey)
-    if form.validate_on_submit():
-        if form.types.data == 'username':
-            form.keyword.data = "AD%5C" + form.keyword.data
-        results = Abs_Actions.abs_device_get(keyword_choice=form.keyword.data, keyword_type_choice=form.types.data)
-        if results['data'] == []: 
-            flash('Try different keyword.')
-            return redirect(url_for('main.requests'))
-        return redirect(url_for('main.requests', s_type=f"{form.types.data}", s_keyword=f"{form.keyword.data}"))
-    return render_template('requests.html', title='Requests', form=form, device_results=device_results, results_dict=results_dict, app_results=app_results, s_type=request.args.get('s_type'), s_keyword=request.args.get('s_keyword'))
+    return render_template('requests.html', title='Requests')
+
+@bp.route('/requests/data')
+def requests_data():
+    full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
+    request_dict = Dict_Builder.build_request_dict(full_device_dict)
+    return {'data': [Jsonizers.request_json(key, value) for key, value in request_dict.items()]}
 
 @bp.route('/space_check', methods=['GET', 'POST'])
 #@login_required

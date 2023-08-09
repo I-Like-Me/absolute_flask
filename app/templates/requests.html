@@ -1,25 +1,95 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>Search</h1>
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
-    <hr>
-    {% for result in device_results['data'] %}
-        {% if s_type == "deviceName" or form.types.data == "serialNumber" %}
-            {% if result['agentStatus'] == "A" %}
-                {% include '_machine_results.html' %}
-            {% endif %}
-        {% endif %}
-        {% if s_type == "username" %}
-            {% if result['agentStatus'] == "A" %}
-                {% include '_user_results.html' %}
-            {% endif %}
-        {% endif %} 
-    {% endfor %}
-    <hr>
+    <table id="data" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Device</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Device</th>
+                <th>User</th>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    // Formatting function for row details - modify as you need
+    function format(d) {
+        // `d` is the original data object for the row
+        return (
+            '<dl>' +
+            '<dt>Manufacturer:</dt>' +
+            '<dd>' +
+            d.manufacturer +
+            '</dd>' +
+            '<dt>Model:</dt>' +
+            '<dd>' +
+            d.model +
+            '</dd>' +
+            '<dt>Serial Number:</dt>' +
+            '<dd>' +
+            d.serial +
+            '</dd>' +
+            '<dt>IP Address:</dt>' +
+            '<dd>' +
+            d.ip +
+            '</dd>' +
+            '<dt>MAC Address:</dt>' +
+            '<dd>' +
+            d.mac +
+            '</dd>' +
+            '<dt>Last Connected:</dt>' +
+            '<dd>' +
+            d.connected +
+            '</dd>' +
+            '<dt>OS Product Level:</dt>' +
+            '<dd>' +
+            d.os +
+            '</dd>' +
+            '<dt>Free Space:</dt>' +
+            '<dd>' +
+            d.space +
+            '</dd>' +
+            '</dl>' 
+        );
+    }
+    
+    let table = new DataTable('#data', {
+        ajax: '/requests/data',
+        columns: [
+            {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: ''
+            },
+            { data: 'device' },
+            { data: 'user' }
+        ],
+        order: [[1, 'asc']]
+    });
+    
+    // Add event listener for opening and closing details
+    table.on('click', 'td.dt-control', function (e) {
+        let tr = e.target.closest('tr');
+        let row = table.row(tr);
+    
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+        }
+        else {
+            // Open this row
+            row.child(format(row.data())).show();
+        }
+    });
+  </script>
 {% endblock %}

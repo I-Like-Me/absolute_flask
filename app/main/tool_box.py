@@ -8,7 +8,21 @@ class Jsonizers:
         return {
             'device': key,
             'size': value
-        } 
+        }
+
+    def request_json(key, value):
+        return {
+            'device': key,
+            'user': value[0],
+            'manufacturer': value[1],
+            'model': value[2],
+            'serial': value[3],
+            'ip': value[4],
+            'mac': value[5],
+            'connected': value[6],
+            'os': value[7],
+            'space': value[8]
+        }  
 
     def version_json(key, value):
         return {
@@ -18,6 +32,57 @@ class Jsonizers:
         } 
 
 class Dict_Builder:
+
+    def build_request_dict(all_machines):
+        request_dict = {}
+        for machine in all_machines['data']: 
+            if 'currentUsername' in machine:
+                request_dict[machine['deviceName']] = [machine['currentUsername']]
+            else:
+                request_dict[machine['deviceName']] = ['N/A']    
+            if 'systemManufacturer' in machine:
+                request_dict[machine['deviceName']].append(machine['systemManufacturer'])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'systemModel' in machine:
+                request_dict[machine['deviceName']].append(machine['systemModel'])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'serialNumber' in machine:
+                request_dict[machine['deviceName']].append(machine['serialNumber'])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'localIp' in machine:
+                request_dict[machine['deviceName']].append(machine['localIp'])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'networkAdapters' in machine:
+                for adapter in machine['networkAdapters']:
+                    if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
+                        request_dict[machine['deviceName']].append(adapter['macAddress'])
+                    if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
+                        request_dict[machine['deviceName']].append('Last connected through VPN.')
+                if len(request_dict[machine['deviceName']]) == 5:
+                    request_dict[machine['deviceName']].append('N/A') 
+            else:
+                request_dict[machine['deviceName']].append('N/A')  
+            if 'lastConnectedDateTimeUtc' in machine:
+                request_dict[machine['deviceName']].append(machine['lastConnectedDateTimeUtc'][:10])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'build' in machine['operatingSystem']:
+                request_dict[machine['deviceName']].append(library.product_levels[machine['operatingSystem']['build']])
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+            if 'volumes' in machine:
+                for volume in machine['volumes']:
+                    if 'driveLetter' in volume and volume['driveLetter'] == 'C:':
+                        request_dict[machine['deviceName']].append(f"{str(round(int(volume['freeSpaceBytes'])/(1024*1024*1024)))} GB")
+                if len(request_dict[machine['deviceName']]) == 9:
+                    request_dict[machine['deviceName']].append('N/A') 
+            else:
+                request_dict[machine['deviceName']].append('N/A')
+        return request_dict
 
     def build_space_dict(all_machines):
         space_dict = {}
