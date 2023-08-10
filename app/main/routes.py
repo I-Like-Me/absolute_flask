@@ -22,7 +22,9 @@ def requests():
 @bp.route('/requests/data')
 def requests_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
-    request_dict = Dict_Builder.build_request_dict(full_device_dict)
+    cortex_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Cortex')&select=deviceName, appName&pageSize=500&agentStatus=A")
+    rapid_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Rapid7')&select=deviceName, appName&pageSize=500&agentStatus=A")
+    request_dict = Dict_Builder.build_request_dict(full_device_dict, cortex_dict, rapid_dict)
     return {'data': [Jsonizers.request_json(key, value) for key, value in request_dict.items()]}
 
 @bp.route('/space_check', methods=['GET', 'POST'])

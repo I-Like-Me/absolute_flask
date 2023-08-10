@@ -1,6 +1,5 @@
 from app import library
 from datetime import datetime 
-import pandas as pd
 
 class Jsonizers:
 
@@ -21,7 +20,9 @@ class Jsonizers:
             'mac': value[5],
             'connected': value[6],
             'os': value[7],
-            'space': value[8]
+            'space': value[8],
+            'cortex': value[9],
+            'insight': value[10],
         }  
 
     def version_json(key, value):
@@ -33,8 +34,11 @@ class Jsonizers:
 
 class Dict_Builder:
 
-    def build_request_dict(all_machines):
+    def build_request_dict(all_machines, cortex, rapid):
         request_dict = {}
+        app_dict = {}
+        app_dict = Collector.col_app_data(cortex, app_dict)
+        app_dict = Collector.col_app_data(rapid, app_dict)
         for machine in all_machines['data']: 
             if 'currentUsername' in machine:
                 request_dict[machine['deviceName']] = [machine['currentUsername']]
@@ -60,7 +64,7 @@ class Dict_Builder:
                 for adapter in machine['networkAdapters']:
                     if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
                         request_dict[machine['deviceName']].append(adapter['macAddress'])
-                    if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
+                    elif 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
                         request_dict[machine['deviceName']].append('Last connected through VPN.')
                 if len(request_dict[machine['deviceName']]) == 5:
                     request_dict[machine['deviceName']].append('N/A') 
@@ -78,10 +82,22 @@ class Dict_Builder:
                 for volume in machine['volumes']:
                     if 'driveLetter' in volume and volume['driveLetter'] == 'C:':
                         request_dict[machine['deviceName']].append(f"{str(round(int(volume['freeSpaceBytes'])/(1024*1024*1024)))} GB")
-                if len(request_dict[machine['deviceName']]) == 9:
+                if len(request_dict[machine['deviceName']]) == 8:
                     request_dict[machine['deviceName']].append('N/A') 
             else:
                 request_dict[machine['deviceName']].append('N/A')
+            if machine['deviceName'] in app_dict.keys():
+                if 'Cortex XDR' in app_dict[machine['deviceName']]:
+                    request_dict[machine['deviceName']].append('Installed')
+                else:
+                    request_dict[machine['deviceName']].append('Not Installed')
+                if 'Rapid7 Insight Agent' in app_dict[machine['deviceName']]:
+                    request_dict[machine['deviceName']].append('Installed')
+                else:
+                    request_dict[machine['deviceName']].append('Not Installed')
+            else:
+                request_dict[machine['deviceName']].append('Not Installed')
+                request_dict[machine['deviceName']].append('Not Installed')
         return request_dict
 
     def build_space_dict(all_machines):
@@ -94,43 +110,43 @@ class Dict_Builder:
                             space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
         return space_dict
 
-    def build_machine_dict(raw_device_data, raw_app_data, raw_bit_data):
-        clean_data = {}
-        clean_data['name'] = raw_device_data['data'][0]['deviceName']
-        clean_data['manufacturer'] = raw_device_data['data'][0]['systemManufacturer']
-        clean_data['model'] = raw_device_data['data'][0]['systemModel']
-        clean_data['serial'] = raw_device_data['data'][0]['serialNumber']
-        clean_data['ip'] = raw_device_data['data'][0]['localIp']
-        for adapter in raw_device_data['data'][0]['networkAdapters']:
-            if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == clean_data['ip']:
-                clean_data['mac'] = adapter['macAddress']
-            if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == clean_data['ip']:
-                clean_data['mac'] = 'Last connected through VPN.'
-        clean_data['connected'] = raw_device_data['data'][0]['lastConnectedDateTimeUtc']
-        if 'currentUsername' in raw_device_data['data'][0]:
-            clean_data['user'] = raw_device_data['data'][0]['currentUsername']
-        if 'build' in raw_device_data['data'][0]['operatingSystem']:
-            clean_data['os'] = library.product_levels[raw_device_data['data'][0]['operatingSystem']['build']]
-        for volume in raw_device_data['data'][0]['volumes']:
-            if 'driveLetter' in volume and volume['driveLetter'] == 'C:':     
-                clean_data['space'] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
-        for app in raw_app_data['data']:
-            if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
-                clean_data['citrix'] = app['appName']
-        clean_data['cortex'] = 'No'
-        for app in raw_app_data['data']:
-            if 'Cortex' in app['appName']:    
-                clean_data['cortex'] = 'Yes'
-        clean_data['insight'] = 'No'
-        for app in raw_app_data['data']:
-            if 'Rapid7' in app['appName']: 
-                clean_data['insight'] = 'Yes'
-        if str(raw_bit_data[0]) == '<Response [200]>':
-            clean_data['bitlocker'] = raw_bit_data[1]['data']['cdfFieldValue']
-        if str(raw_bit_data[0]) != '<Response [200]>':
-            clean_data['bitlocker'] = 'no entry'
-        clean_data['member'] = 'N/A'
-        return clean_data
+    # def build_machine_dict(raw_device_data, raw_app_data, raw_bit_data):
+    #     clean_data = {}
+    #     clean_data['name'] = raw_device_data['data'][0]['deviceName']
+    #     clean_data['manufacturer'] = raw_device_data['data'][0]['systemManufacturer']
+    #     clean_data['model'] = raw_device_data['data'][0]['systemModel']
+    #     clean_data['serial'] = raw_device_data['data'][0]['serialNumber']
+    #     clean_data['ip'] = raw_device_data['data'][0]['localIp']
+    #     for adapter in raw_device_data['data'][0]['networkAdapters']:
+    #         if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == clean_data['ip']:
+    #             clean_data['mac'] = adapter['macAddress']
+    #         if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == clean_data['ip']:
+    #             clean_data['mac'] = 'Last connected through VPN.'
+    #     clean_data['connected'] = raw_device_data['data'][0]['lastConnectedDateTimeUtc']
+    #     if 'currentUsername' in raw_device_data['data'][0]:
+    #         clean_data['user'] = raw_device_data['data'][0]['currentUsername']
+    #     if 'build' in raw_device_data['data'][0]['operatingSystem']:
+    #         clean_data['os'] = library.product_levels[raw_device_data['data'][0]['operatingSystem']['build']]
+    #     for volume in raw_device_data['data'][0]['volumes']:
+    #         if 'driveLetter' in volume and volume['driveLetter'] == 'C:':     
+    #             clean_data['space'] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
+    #     for app in raw_app_data['data']:
+    #         if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
+    #             clean_data['citrix'] = app['appName']
+    #     clean_data['cortex'] = 'No'
+    #     for app in raw_app_data['data']:
+    #         if 'Cortex' in app['appName']:    
+    #             clean_data['cortex'] = 'Yes'
+    #     clean_data['insight'] = 'No'
+    #     for app in raw_app_data['data']:
+    #         if 'Rapid7' in app['appName']: 
+    #             clean_data['insight'] = 'Yes'
+    #     if str(raw_bit_data[0]) == '<Response [200]>':
+    #         clean_data['bitlocker'] = raw_bit_data[1]['data']['cdfFieldValue']
+    #     if str(raw_bit_data[0]) != '<Response [200]>':
+    #         clean_data['bitlocker'] = 'no entry'
+    #     clean_data['member'] = 'N/A'
+    #     return clean_data
     
     def build_version_dict(app_choice, raw_data, version_data):
         version_dict = {}
@@ -215,6 +231,16 @@ class Dict_Builder:
             all_depts_data["filter_all"].append('yes')
         return all_depts_data
 
+class Collector:
+    def col_app_data(raw_data, old_bin):
+        new_bin = old_bin
+        for device in raw_data['data']:
+            if device['deviceName'] not in new_bin:
+                new_bin[device['deviceName']] = [device['appName']]
+            else:
+                new_bin[device['deviceName']].append(device['appName'])
+        return new_bin
+ 
 class Translators:
 
     def app_select_tlr(app_choice):
