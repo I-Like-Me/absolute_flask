@@ -3,8 +3,9 @@ from app.main.absolute_api import Abs_Actions
 from app.main.tool_box import Dict_Builder, Data_fillers
 from bokeh.plotting import figure
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Select
+from bokeh.models import ColumnDataSource, Select, Div
 from bokeh.io import curdoc
+from bokeh.core.enums import SizingMode
 
 full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&select=deviceName,localIp,volumes,espInfo.encryptionStatus,systemManufacturer,operatingSystem&agentStatus=A")
 raw_citrix_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
@@ -22,6 +23,7 @@ display_names = ['Admin', 'Allergy', 'Conference', 'Counseling',
                          'Optometry', 'Patient Accounts', 'Pharmacy', 
                          'Popup Clinic', 'Primary Care', 'PSS', 'PT', 
                          'Specialty', 'Wellness', 'Womens Health']
+display_names.reverse()
 
 d_type = 'stock'
 f_type = 'all'
@@ -29,63 +31,63 @@ f_type = 'all'
 d_types = {
     'stock': {
         'data_id': 'dept_counts',
-        'title': 'devices in department'
+        'title': 'devices in department - Total: '
     },
     'space': {
         'data_id': 'space_counts',
-        'title': 'devices under 25 gigs'
+        'title': 'devices under 25 gigs - Total: '
     },
     'bitlock': {
         'data_id': 'bit_counts',
-        'title': 'devices that are encripted'
+        'title': 'devices that are encripted Total: - Total: '
     },
     'citrix': {
         'data_id': 'ctx_ver_counts',
-        'title': 'different Citrix versions'
+        'title': 'Different Citrix versions - Max: '
     },
     'zoom': {
         'data_id': 'zm_ver_counts',
-        'title': 'different Zoom versions'
+        'title': 'Different Zoom versions - Max: '
     },
     'Windows': {
         'data_id': 'wpl_ver_counts',
-        'title': 'different Windows build levels'
+        'title': 'Different Windows build levels - Max: '
     },
     'Dell': {
         'data_id': 'dell_counts',
-        'title': 'Dell machines'
+        'title': 'Dell machines - Total: '
     },
     'Lenovo': {
         'data_id': 'lenovo_counts',
-        'title': 'Lenovo machines'
+        'title': 'Lenovo machines - Total: '
     },
     'Cortex': {
         'data_id': 'cor_counts',
-        'title': 'machines with Cortex'
+        'title': 'machines with Cortex - Total: '
     },
     'Insight VM': {
         'data_id': 'ivm_counts',
-        'title': 'machines with Insight VM'
+        'title': 'machines with Insight VM - Total: '
     },
     '1 Year': {
         'data_id': 'year_1_counts',
-        'title': 'machines one year old or less'
+        'title': 'machines one year old or less - Total: '
     },
     '2 Year': {
         'data_id': 'year_2_counts',
-        'title': 'machines 2 years old'
+        'title': 'machines 2 years old - Total: '
     },
     '3 Year': {
         'data_id': 'year_3_counts',
-        'title': 'machines 3 years old'
+        'title': 'machines 3 years old - Total: '
     },
     '4 Year': {
         'data_id': 'year_4_counts',
-        'title': 'machines 4 years old'
+        'title': 'machines 4 years old - Total: '
     },
     '5 Year': {
         'data_id': 'year_5_counts',
-        'title': 'machines 5 years old or more'
+        'title': 'machines 5 years old or more - Total: '
     }
 }
 
@@ -135,17 +137,33 @@ class B_Getter:
         dept_names = prepped_df.dept_names.values.tolist()
         data_counts = prepped_df[d_type].values.tolist()
         return ColumnDataSource(data=dict(dept_names=dept_names, data_counts=data_counts))
+    
+    def get_total(src, d_type):
+        if d_types[d_type]['data_id'] == 'ctx_ver_counts':
+            return max(src.data['data_counts'])
+        if d_types[d_type]['data_id'] == 'zm_ver_counts':
+            return max(src.data['data_counts'])
+        if d_types[d_type]['data_id'] == 'wpl_ver_counts':
+            return max(src.data['data_counts'])
+        return sum(src.data['data_counts'])
+        
 
 ToolTips = [('Name', '@dept_names'), ('Count', '@data_counts')] 
 
 class B_Maker:
     
     def make_plot(source, title):
-        plot = figure(y_range=display_names, height=700, tools="hover", tooltips=ToolTips, toolbar_location=None)
-        plot.title.text = title
+        plot = figure(y_range=display_names,
+                      sizing_mode = "scale_both",
+                      max_height= 650,
+                      tools="hover", 
+                      tooltips=ToolTips, 
+                      toolbar_location=None)
+        plot.title.text = f"{title} {B_Getter.get_total(source, d_type)}"
         plot.hbar(y='dept_names', right='data_counts', height=0.3, source=source)
         plot.ygrid.grid_line_color = None
         plot.x_range.start = 0
+
 
         return plot  
 
@@ -153,10 +171,10 @@ class B_Updater:
     def update_plot(attrname, old, new):
         d_type = d_type_select.value
         f_type = f_type_select.value
-        plot.title.text = "Data for " + d_types[d_type]['title']
 
         src = B_Getter.get_dataset(df, d_types[d_type]['data_id'], f_types[f_type]['filter_id'])
         source.data.update(src.data)
+        plot.title.text = f"{d_types[d_type]['title']} {B_Getter.get_total(source, d_type)}"
 
 
 d_type_select = Select(value=d_type, title='Data Type', options=sorted(d_types.keys()))
@@ -168,7 +186,7 @@ plot = B_Maker.make_plot(source, "Number of " + d_types[d_type]['title'])
 d_type_select.on_change('value', B_Updater.update_plot)
 f_type_select.on_change('value', B_Updater.update_plot)
 
+controls_and_total = row(d_type_select, f_type_select)
 
-controls = column(d_type_select, f_type_select)
-
-curdoc().add_root(row(plot, controls))
+curdoc().add_root(controls_and_total)
+curdoc().add_root(plot)
