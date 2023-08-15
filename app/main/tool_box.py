@@ -41,7 +41,10 @@ class Dict_Builder:
         app_dict = Collector.col_app_data(rapid, app_dict)
         for machine in all_machines['data']: 
             if 'currentUsername' in machine:
-                request_dict[machine['deviceName']] = [machine['currentUsername']]
+                if "AD" in machine['currentUsername']:
+                    request_dict[machine['deviceName']] = [machine['currentUsername'][3:]]
+                else:
+                    request_dict[machine['deviceName']] = [machine['currentUsername']]
             else:
                 request_dict[machine['deviceName']] = ['N/A']    
             if 'systemManufacturer' in machine:

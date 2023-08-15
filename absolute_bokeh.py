@@ -25,27 +25,27 @@ display_names = ['Admin', 'Allergy', 'Conference', 'Counseling',
                          'Specialty', 'Wellness', 'Womens Health']
 display_names.reverse()
 
-d_type = 'stock'
-f_type = 'all'
+d_type = 'Stock'
+f_type = 'All'
 
 d_types = {
-    'stock': {
+    'Stock': {
         'data_id': 'dept_counts',
-        'title': 'devices in department - Total: '
+        'title': 'Devices in department - Total: '
     },
-    'space': {
+    'Space': {
         'data_id': 'space_counts',
-        'title': 'devices under 25 gigs - Total: '
+        'title': 'Devices under 25 gigs - Total: '
     },
-    'bitlock': {
+    'Bitlock': {
         'data_id': 'bit_counts',
-        'title': 'devices that are encripted Total: - Total: '
+        'title': 'Devices that are encripted - Total: '
     },
-    'citrix': {
+    'Citrix': {
         'data_id': 'ctx_ver_counts',
         'title': 'Different Citrix versions - Max: '
     },
-    'zoom': {
+    'Zoom': {
         'data_id': 'zm_ver_counts',
         'title': 'Different Zoom versions - Max: '
     },
@@ -63,54 +63,54 @@ d_types = {
     },
     'Cortex': {
         'data_id': 'cor_counts',
-        'title': 'machines with Cortex - Total: '
+        'title': 'Machines with Cortex - Total: '
     },
     'Insight VM': {
         'data_id': 'ivm_counts',
-        'title': 'machines with Insight VM - Total: '
+        'title': 'Machines with Insight VM - Total: '
     },
     '1 Year': {
         'data_id': 'year_1_counts',
-        'title': 'machines one year old or less - Total: '
+        'title': 'Machines one year old or less - Total: '
     },
     '2 Year': {
         'data_id': 'year_2_counts',
-        'title': 'machines 2 years old - Total: '
+        'title': 'Machines 2 years old - Total: '
     },
     '3 Year': {
         'data_id': 'year_3_counts',
-        'title': 'machines 3 years old - Total: '
+        'title': 'Machines 3 years old - Total: '
     },
     '4 Year': {
         'data_id': 'year_4_counts',
-        'title': 'machines 4 years old - Total: '
+        'title': 'Machines 4 years old - Total: '
     },
     '5 Year': {
         'data_id': 'year_5_counts',
-        'title': 'machines 5 years old or more - Total: '
+        'title': 'Machines 5 years old or more - Total: '
     }
 }
 
 f_types = {
-    'laptops': {
+    'Laptops': {
         'filter_id': 'filter_lp'
     },
-    'brooklyn': {
+    'Brooklyn': {
         'filter_id': 'filter_bk'
     },
-    'all': {
+    'All': {
         'filter_id': 'filter_all'
     },
-    'third floor': {
+    'Third Floor': {
         'filter_id': 'filter_third_floor'
     },
-    'fourth floor': {
+    'Fourth Floor': {
         'filter_id': 'filter_fourth_floor'
     },
-    'second floor': {
+    'Second Floor': {
         'filter_id': 'filter_second_floor'
     },
-    '726 broadway': {
+    '726 Broadway': {
         'filter_id': 'filter_726'
     }
 }
@@ -174,7 +174,7 @@ class B_Updater:
 
         src = B_Getter.get_dataset(df, d_types[d_type]['data_id'], f_types[f_type]['filter_id'])
         source.data.update(src.data)
-        plot.title.text = f"{d_types[d_type]['title']} {B_Getter.get_total(source, d_type)}"
+        plot.title.text = f"{d_types[d_type]['title']} {int(B_Getter.get_total(source, d_type))}"
 
 
 d_type_select = Select(value=d_type, title='Data Type', options=sorted(d_types.keys()))
