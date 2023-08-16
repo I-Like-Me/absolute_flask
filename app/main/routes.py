@@ -11,7 +11,7 @@ from bokeh.embed import server_document
 
 @bp.route('/')
 @bp.route('/index')
-#@login_required
+@login_required
 def index():
     return render_template('index.html', title='Workbench')
 
@@ -28,7 +28,7 @@ def requests_data():
     return {'data': [Jsonizers.request_json(key, value) for key, value in request_dict.items()]}
 
 @bp.route('/space_check', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def space_check():
     return render_template('space_check.html', title='Space Checker')
 
@@ -39,7 +39,7 @@ def space_data():
     return {'data': [Jsonizers.space_json(key, value) for key, value in space_dict.items()]}
 
 @bp.route('/version_check', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def version_check():
     appverforms = AppVerForm()
     appverforms.app.choices = [(app.id, app.name)for app in App.query.all()]
@@ -69,9 +69,9 @@ def version(app):
     return jsonify({'versions' : versionList})
 
 @bp.route('/graphs/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def graphs():
-    script = server_document('http://127.0.0.1:5006/absolute_bokeh')
+    script = server_document('https://www.workbench.help/viz:5006')
     return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
 
