@@ -70,9 +70,9 @@ def version(app):
     return jsonify({'versions' : versionList})
 
 @bp.route('/graphs/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def graphs():
-    script = server_document('https://127.0.0.1:5006/absolute_bokeh')
+    script = server_document('http://127.0.0.1:5006/absolute_bokeh')
     return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
 
