@@ -71,7 +71,7 @@ def version(app):
 @bp.route('/graphs/', methods=['GET', 'POST'])
 @login_required
 def graphs():
-    script = server_document('https://www.workbench.help/viz:5006')
+    script = server_document('https://www.workbench.help/viz')
     return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
 
