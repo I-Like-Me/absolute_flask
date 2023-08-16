@@ -9,6 +9,7 @@ import pandas as pd
 from bokeh.embed import server_document
 
 
+
 @bp.route('/')
 @bp.route('/index')
 @login_required
@@ -69,9 +70,9 @@ def version(app):
     return jsonify({'versions' : versionList})
 
 @bp.route('/graphs/', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def graphs():
-    script = server_document('http://127.0.0.1:5006')
+    script = server_document('http://127.0.0.1:5006/absolute_bokeh')
     return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
 
