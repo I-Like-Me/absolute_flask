@@ -6,6 +6,9 @@ from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource, Select, Div
 from bokeh.io import curdoc
 from bokeh.core.enums import SizingMode
+from bokeh.settings import settings
+
+settings.resources = 'cdn'
 
 full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&select=deviceName,localIp,volumes,espInfo.encryptionStatus,systemManufacturer,operatingSystem&agentStatus=A")
 raw_citrix_data = Abs_Actions.app_version_get("/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A")
