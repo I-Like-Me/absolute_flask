@@ -72,7 +72,8 @@ def version(app):
 @bp.route('/graphs/', methods=['GET', 'POST'])
 @login_required
 def graphs():
-    script = server_document('http://127.0.0.1:5006/absolute_bokeh')
+    #script = server_document('http://127.0.0.1:5006/absolute_bokeh')
+    script = server_document(url=r'/bokeh/absolute_bokeh', relative_urls=True)
     return render_template('graphs.html', title='Graphs', script=script, template="Flask")
 
 
