@@ -1,19 +1,21 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+    <h2>Student Health Center Assets</h2>
+    </br>
     <table id="data" class="table table-striped" style="width:100%">
         <thead>
             <tr>
                 <th></th>
                 <th>Device</th>
-                <th>User</th>
+                <th>Last User</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
                 <th></th>
                 <th>Device</th>
-                <th>User</th>
+                <th>Last User</th>
             </tr>
         </tfoot>
     </table>
@@ -71,7 +73,7 @@
     }
     
     let table = new DataTable('#data', {
-        ajax: '/requests/data',
+        ajax: '/assets/data',
         columns: [
             {
                 className: 'dt-control',

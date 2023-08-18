@@ -9,7 +9,7 @@ class Jsonizers:
             'size': value
         }
 
-    def request_json(key, value):
+    def assets_json(key, value):
         return {
             'device': key,
             'user': value[0],
@@ -34,74 +34,74 @@ class Jsonizers:
 
 class Dict_Builder:
 
-    def build_request_dict(all_machines, cortex, rapid):
-        request_dict = {}
+    def build_assets_dict(all_machines, cortex, rapid):
+        assets_dict = {}
         app_dict = {}
         app_dict = Collector.col_app_data(cortex, app_dict)
         app_dict = Collector.col_app_data(rapid, app_dict)
         for machine in all_machines['data']: 
             if 'currentUsername' in machine:
                 if "AD" in machine['currentUsername']:
-                    request_dict[machine['deviceName']] = [machine['currentUsername'][3:]]
+                    assets_dict[machine['deviceName']] = [machine['currentUsername'][3:]]
                 else:
-                    request_dict[machine['deviceName']] = [machine['currentUsername']]
+                    assets_dict[machine['deviceName']] = [machine['currentUsername']]
             else:
-                request_dict[machine['deviceName']] = ['N/A']    
+                assets_dict[machine['deviceName']] = ['N/A']    
             if 'systemManufacturer' in machine:
-                request_dict[machine['deviceName']].append(machine['systemManufacturer'])
+                assets_dict[machine['deviceName']].append(machine['systemManufacturer'])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'systemModel' in machine:
-                request_dict[machine['deviceName']].append(machine['systemModel'])
+                assets_dict[machine['deviceName']].append(machine['systemModel'])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'serialNumber' in machine:
-                request_dict[machine['deviceName']].append(machine['serialNumber'])
+                assets_dict[machine['deviceName']].append(machine['serialNumber'])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'localIp' in machine:
-                request_dict[machine['deviceName']].append(machine['localIp'])
+                assets_dict[machine['deviceName']].append(machine['localIp'])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'networkAdapters' in machine:
                 for adapter in machine['networkAdapters']:
-                    if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
-                        request_dict[machine['deviceName']].append(adapter['macAddress'])
-                    elif 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == request_dict[machine['deviceName']][4]:
-                        request_dict[machine['deviceName']].append('Last connected through VPN.')
-                if len(request_dict[machine['deviceName']]) == 5:
-                    request_dict[machine['deviceName']].append('N/A') 
+                    if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == assets_dict[machine['deviceName']][4]:
+                        assets_dict[machine['deviceName']].append(adapter['macAddress'])
+                    elif 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == assets_dict[machine['deviceName']][4]:
+                        assets_dict[machine['deviceName']].append('Last connected through VPN.')
+                if len(assets_dict[machine['deviceName']]) == 5:
+                    assets_dict[machine['deviceName']].append('N/A') 
             else:
-                request_dict[machine['deviceName']].append('N/A')  
+                assets_dict[machine['deviceName']].append('N/A')  
             if 'lastConnectedDateTimeUtc' in machine:
-                request_dict[machine['deviceName']].append(machine['lastConnectedDateTimeUtc'][:10])
+                assets_dict[machine['deviceName']].append(machine['lastConnectedDateTimeUtc'][:10])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'build' in machine['operatingSystem']:
-                request_dict[machine['deviceName']].append(library.product_levels[machine['operatingSystem']['build']])
+                assets_dict[machine['deviceName']].append(library.product_levels[machine['operatingSystem']['build']])
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if 'volumes' in machine:
                 for volume in machine['volumes']:
                     if 'driveLetter' in volume and volume['driveLetter'] == 'C:':
-                        request_dict[machine['deviceName']].append(f"{str(round(int(volume['freeSpaceBytes'])/(1024*1024*1024)))} GB")
-                if len(request_dict[machine['deviceName']]) == 8:
-                    request_dict[machine['deviceName']].append('N/A') 
+                        assets_dict[machine['deviceName']].append(f"{str(round(int(volume['freeSpaceBytes'])/(1024*1024*1024)))} GB")
+                if len(assets_dict[machine['deviceName']]) == 8:
+                    assets_dict[machine['deviceName']].append('N/A') 
             else:
-                request_dict[machine['deviceName']].append('N/A')
+                assets_dict[machine['deviceName']].append('N/A')
             if machine['deviceName'] in app_dict.keys():
                 if 'Cortex XDR' in app_dict[machine['deviceName']]:
-                    request_dict[machine['deviceName']].append('Installed')
+                    assets_dict[machine['deviceName']].append('Installed')
                 else:
-                    request_dict[machine['deviceName']].append('Not Installed')
+                    assets_dict[machine['deviceName']].append('Not Installed')
                 if 'Rapid7 Insight Agent' in app_dict[machine['deviceName']]:
-                    request_dict[machine['deviceName']].append('Installed')
+                    assets_dict[machine['deviceName']].append('Installed')
                 else:
-                    request_dict[machine['deviceName']].append('Not Installed')
+                    assets_dict[machine['deviceName']].append('Not Installed')
             else:
-                request_dict[machine['deviceName']].append('Not Installed')
-                request_dict[machine['deviceName']].append('Not Installed')
-        return request_dict
+                assets_dict[machine['deviceName']].append('Not Installed')
+                assets_dict[machine['deviceName']].append('Not Installed')
+        return assets_dict
 
     def build_space_dict(all_machines):
         space_dict = {}
@@ -112,44 +112,6 @@ class Dict_Builder:
                         if round(int(volume['freeSpaceBytes'])/(1024*1024*1024)) <= 25:
                             space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
         return space_dict
-
-    # def build_machine_dict(raw_device_data, raw_app_data, raw_bit_data):
-    #     clean_data = {}
-    #     clean_data['name'] = raw_device_data['data'][0]['deviceName']
-    #     clean_data['manufacturer'] = raw_device_data['data'][0]['systemManufacturer']
-    #     clean_data['model'] = raw_device_data['data'][0]['systemModel']
-    #     clean_data['serial'] = raw_device_data['data'][0]['serialNumber']
-    #     clean_data['ip'] = raw_device_data['data'][0]['localIp']
-    #     for adapter in raw_device_data['data'][0]['networkAdapters']:
-    #         if 'ipV4Address' in adapter and 'macAddress' in adapter and adapter['ipV4Address'] == clean_data['ip']:
-    #             clean_data['mac'] = adapter['macAddress']
-    #         if 'ipV4Address' in adapter and adapter['manufacturer'] == 'Cisco Systems' and adapter['ipV4Address'] == clean_data['ip']:
-    #             clean_data['mac'] = 'Last connected through VPN.'
-    #     clean_data['connected'] = raw_device_data['data'][0]['lastConnectedDateTimeUtc']
-    #     if 'currentUsername' in raw_device_data['data'][0]:
-    #         clean_data['user'] = raw_device_data['data'][0]['currentUsername']
-    #     if 'build' in raw_device_data['data'][0]['operatingSystem']:
-    #         clean_data['os'] = library.product_levels[raw_device_data['data'][0]['operatingSystem']['build']]
-    #     for volume in raw_device_data['data'][0]['volumes']:
-    #         if 'driveLetter' in volume and volume['driveLetter'] == 'C:':     
-    #             clean_data['space'] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
-    #     for app in raw_app_data['data']:
-    #         if 'Citrix Workspace' in app['appName'] or 'Citrix Receiver' in app['appName']:
-    #             clean_data['citrix'] = app['appName']
-    #     clean_data['cortex'] = 'No'
-    #     for app in raw_app_data['data']:
-    #         if 'Cortex' in app['appName']:    
-    #             clean_data['cortex'] = 'Yes'
-    #     clean_data['insight'] = 'No'
-    #     for app in raw_app_data['data']:
-    #         if 'Rapid7' in app['appName']: 
-    #             clean_data['insight'] = 'Yes'
-    #     if str(raw_bit_data[0]) == '<Response [200]>':
-    #         clean_data['bitlocker'] = raw_bit_data[1]['data']['cdfFieldValue']
-    #     if str(raw_bit_data[0]) != '<Response [200]>':
-    #         clean_data['bitlocker'] = 'no entry'
-    #     clean_data['member'] = 'N/A'
-    #     return clean_data
     
     def build_version_dict(app_choice, raw_data, version_data):
         version_dict = {}

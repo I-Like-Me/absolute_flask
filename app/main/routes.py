@@ -16,22 +16,22 @@ from bokeh.embed import server_document
 def index():
     return render_template('index.html', title='Workbench')
 
-@bp.route('/requests', methods=['GET', 'POST'])
-def requests():
-    return render_template('requests.html', title='Requests')
+@bp.route('/assets', methods=['GET', 'POST'])
+def assets():
+    return render_template('assets.html', title='Assets')
 
-@bp.route('/requests/data')
+@bp.route('/assets/data')
 def requests_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
     cortex_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Cortex')&select=deviceName, appName&pageSize=500&agentStatus=A")
     rapid_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Rapid7')&select=deviceName, appName&pageSize=500&agentStatus=A")
-    request_dict = Dict_Builder.build_request_dict(full_device_dict, cortex_dict, rapid_dict)
-    return {'data': [Jsonizers.request_json(key, value) for key, value in request_dict.items()]}
+    assets_dict = Dict_Builder.build_assets_dict(full_device_dict, cortex_dict, rapid_dict)
+    return {'data': [Jsonizers.assets_json(key, value) for key, value in assets_dict.items()]}
 
-@bp.route('/space_check', methods=['GET', 'POST'])
+@bp.route('/storage', methods=['GET', 'POST'])
 @login_required
-def space_check():
-    return render_template('space_check.html', title='Space Checker')
+def storage():
+    return render_template('storage.html', title='Storage')
 
 @bp.route('/space/data')
 def space_data():

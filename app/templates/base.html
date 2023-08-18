@@ -18,10 +18,10 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for('main.requests') }}">Requests</a></li>
-                    <li><a href="{{ url_for('main.space_check') }}">Space Check</a></li>
-                    <li><a href="{{ url_for('main.version_check') }}">Version Check</a></li>
-                    <li><a href="{{ url_for('main.graphs') }}">Graphs</a></li>
+                    <li><a href="{{ url_for('main.assets') }}">Assets</a></li>
+                    <li><a href="{{ url_for('main.storage') }}">Storage</a></li>
+                    <li><a href="{{ url_for('main.version_check') }}">Versions</a></li>
+                    <li><a href="{{ url_for('main.graphs') }}">Data</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}
