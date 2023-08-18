@@ -158,7 +158,7 @@ class B_Maker:
     def make_plot(source, title):
         plot = figure(y_range=display_names,
                       sizing_mode = "scale_both",
-                      max_height= 650,
+                      max_height= 580,
                       tools="hover", 
                       tooltips=ToolTips, 
                       toolbar_location=None)
