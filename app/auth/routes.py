@@ -17,7 +17,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         username = request.form.get('username')
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username.lower()).first()
         if user is None:
             return redirect(url_for('auth.login'))
         try:
@@ -30,8 +30,8 @@ def login():
                 return render_template("auth/login.html", message="2FA Unavailable.")
         state = duo_client.generate_state()
         session['state'] = state
-        session['username'] = username
-        prompt_uri = duo_client.create_auth_url(username, state)
+        session['username'] = username.lower()
+        prompt_uri = duo_client.create_auth_url(username.lower(), state)
         return redirect(prompt_uri)
     return render_template('auth/login.html', title='Sign In', form=form)
 
