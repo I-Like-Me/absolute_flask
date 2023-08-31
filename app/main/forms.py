@@ -1,12 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, RadioField, SelectField
-from wtforms.validators import DataRequired
+from wtforms import SelectField
 
-class RequestForm(FlaskForm):
-    keyword = StringField('Keyword', validators=[DataRequired()])
-    types = RadioField('Keyword Type', choices=[('deviceName','device name'),('username','user name'),('serialNumber','serial number')], default='deviceName')
-    submit = SubmitField('Search')
-
+# SelectFeild used for Version Checker.
 class AppVerForm(FlaskForm):
     app = SelectField('Application', choices=[])
     version = SelectField('Version', choices=[])

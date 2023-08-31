@@ -8,6 +8,8 @@ from app.main.tool_box import Translators as Tlr, Library_Table_Dict_Builders as
 
 def register(app):
     @app.cli.command()
+
+    # Updates the version table.
     def update_version_table():
         """Update version table."""
         print('Starting process...')

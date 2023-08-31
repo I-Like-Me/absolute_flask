@@ -3,7 +3,7 @@ from app.main.absolute_api import Abs_Actions
 from app.main.tool_box import Dict_Builder, Data_fillers
 from bokeh.plotting import figure
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Select, Div
+from bokeh.models import ColumnDataSource, Select
 from bokeh.io import curdoc
 from bokeh.core.enums import SizingMode
 from bokeh.settings import settings

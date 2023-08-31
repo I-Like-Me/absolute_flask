@@ -34,6 +34,7 @@ class Jsonizers:
 
 class Dict_Builder:
 
+    #Builds dictionary for Assets.
     def build_assets_dict(all_machines, cortex, rapid):
         assets_dict = {}
         app_dict = {}
@@ -103,6 +104,7 @@ class Dict_Builder:
                 assets_dict[machine['deviceName']].append('Not Installed')
         return assets_dict
 
+    #Builds dictionary for Space Checker.
     def build_space_dict(all_machines):
         space_dict = {}
         for machine in all_machines['data']:
@@ -113,6 +115,7 @@ class Dict_Builder:
                             space_dict[machine['deviceName']] = round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
         return space_dict
     
+    #Builds dictionary for Version Checker.
     def build_version_dict(app_choice, raw_data, version_data):
         version_dict = {}
         if app_choice.name == 'Citrix':
@@ -135,6 +138,7 @@ class Dict_Builder:
                             version_dict[app['deviceName']] = 'Windows', version.fake_key
         return version_dict
     
+    # Last dictionary before conversion to Dataframe.
     def dict_for_df(dept_dicts):
         all_depts_data = {
             "dept_names": [],
@@ -197,6 +201,8 @@ class Dict_Builder:
         return all_depts_data
 
 class Collector:
+
+    # Collects program data [Cortext, InsightVM] for Assets dictionary.
     def col_app_data(raw_data, old_bin):
         new_bin = old_bin
         for device in raw_data['data']:
@@ -208,6 +214,7 @@ class Collector:
  
 class Translators:
 
+    # Confirm which application is selected.
     def app_select_tlr(app_choice):
         if app_choice == 'Citrix':
             return "/v3/reporting/applications-advanced", "filter=(appNameContains eq 'receiver' or appNameContains eq 'workspace')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A"
@@ -215,7 +222,8 @@ class Translators:
             return "/v3/reporting/applications-advanced", "filter=(appNameContains eq 'Zoom')&select=deviceName, appName, appVersion&pageSize=500&agentStatus=A"
         if app_choice == 'Windows Product Level':
             return "/v3/reporting/devices", "pageSize=500&agentStatus=A"
-        
+
+    # Confirm which operator is selected.    
     def opt_select_tlr(operator, ver_choice, ver_dict):
         filtered_dict = {}
         for ver_key, ver_val in ver_dict.items():
@@ -233,6 +241,7 @@ class Translators:
                 filtered_dict[ver_key] = ver_val
         return filtered_dict
     
+    # Confirm year device was deployed.
     def get_age(year_made):
         int_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
         if year_made[-1] in int_list and year_made[-2] in int_list:
@@ -240,16 +249,19 @@ class Translators:
         else:
             return None
     
+    # Confirm device IP.
     def get_ip(curr_device, raw_device_data):
         for device in raw_device_data['data']:
             if device['deviceName'] == curr_device:
                 return device['localIp']
 
+    # Confirm device manufacturer.
     def get_manufacturer(curr_device, raw_device_data):
         for device in raw_device_data['data']:
             if device['deviceName'] == curr_device:
                 return device['systemManufacturer']
 
+    # Confirm remaining space on disk.
     def get_space(curr_device, raw_device_data):
         for device in raw_device_data['data']:
             if device['deviceName'] == curr_device:
@@ -258,6 +270,7 @@ class Translators:
                         if 'driveLetter' in volume and volume['driveLetter'] == 'C:':     
                             return round(int(volume['freeSpaceBytes'])/(1024*1024*1024))
     
+    # Confirm device encryption status.
     def get_ncr(curr_device, raw_device_data):
         for device in raw_device_data['data']:
             if device['deviceName'] == curr_device:
@@ -273,12 +286,14 @@ class Translators:
                     if device['espInfo']['encryptionStatus'] == 'INST':
                         return False
 
+    # Confirm device OS build level.
     def get_os_build(curr_device, raw_device_data):
         for device in raw_device_data['data']:
             if device['deviceName'] == curr_device:
                 if 'build' in device['operatingSystem']:
                     return library.product_levels[device['operatingSystem']['build']]
-            
+
+    # Confirm device Citrix version.        
     def get_citrix_ver(curr_device, raw_data):
         for app in raw_data['data']:
             if app['deviceName'] == curr_device:
@@ -286,6 +301,7 @@ class Translators:
                     correct_ver_name = VNM.citrix_name_maker(app['appVersion'])
                     return correct_ver_name
     
+    # Confirm device Zoom version.
     def get_zoom_ver(curr_device, raw_data):
         for app in raw_data['data']:
             if app['deviceName'] == curr_device:
@@ -293,6 +309,7 @@ class Translators:
                     correct_ver_name = VNM.zoom_name_maker(app['appVersion'])
                     return correct_ver_name
     
+    # Confirm if Cortex is installed.
     def get_cortex(curr_device, raw_data):
         device_list = []
         for device in raw_data['data']:
@@ -301,7 +318,8 @@ class Translators:
             return True
         else:
             return False
-
+    
+    # Confirm if InsightVM is installed.
     def get_insightvm(curr_device, raw_data):
         device_list = []
         for device in raw_data['data']:
@@ -310,7 +328,8 @@ class Translators:
             return True
         else:
             return False
-        
+
+    # Confirm which device the department is part of.    
     def get_dept(device_name, device_subnet):
         dept_global = ["FLORANCE", "CSLA", "BUENOS", "BERLIN", "PRAGUE"]
         dept_offsite = ["128.122.101", "216.165.95", "128.122.111", "128.122.132", "128.122.226"]
@@ -390,33 +409,16 @@ class Translators:
 
 class List_builders:
 
+    # Builds list of all device names.
     def full_device_name_list(raw_abs_data):
         device_name_list = []
         for device in raw_abs_data['data']:
             device_name_list.append(device["deviceName"])
         return device_name_list
 
-class Table_List_Builder:
-    
-    def build_version_list(app_name, raw_data):
-        unique_library_dict = {}
-        if app_name == 'Citrix':
-            for app in raw_data['data']:
-                if 'Citrix Workspace' in app['appName']:
-                    if app['appName'] not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
-                        unique_library_dict[app['appName']] = app['appVersion']                    
-                if 'Citrix Receiver' in app['appName']:
-                    temp_receiver_name = f"{app['appName']}{app['appVersion']}"
-                    if temp_receiver_name not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
-                        unique_library_dict[temp_receiver_name] = app['appVersion']
-        if app_name == 'Zoom':
-            for app in raw_data['data']:
-                if 'Zoom' in app['appName'] or 'Zoom(32bit)' in app['appName'] and app['appName'] not in unique_library_dict.keys() and app['appVersion'] not in unique_library_dict.values():
-                    unique_library_dict[app['appName']] = app['appVersion']
-        return unique_library_dict
-
 class Library_Table_Dict_Builders:
 
+    # Library Builder for CLI.
     def ctx_lib_tab_dict(app_name, raw_data):
         unique_library_dict = {}
         if app_name == 'Citrix':
@@ -437,6 +439,7 @@ class Library_Table_Dict_Builders:
 
 class BDT: #Blank Dict Template
     
+    # Single department dictionary template.
     def blank_graph_dict(graph_dict_name):
         graph_dict_name = {
             "space_count": 0,
@@ -460,6 +463,7 @@ class BDT: #Blank Dict Template
         }
         return graph_dict_name
     
+    # Single device dictionary template.
     def blank_device_dict(device_dict_name):
         device_dict_name = {
             "dept": '', 
@@ -479,6 +483,7 @@ class BDT: #Blank Dict Template
         }
         return device_dict_name
     
+    # Blank version dictionary template.
     def blank_unique_ver_dict(dept_dict_names):
         dept_dict_names = {
             'citrix': [],
@@ -537,6 +542,7 @@ class MDG: #Multi Dict Generator
 
 class VNM: #Verison Name Maker
 
+    # Generates display names for Citrix versions.
     def citrix_name_maker(old_ver):
         new_ver_name = ''
         fin_idx = 0
@@ -556,6 +562,7 @@ class VNM: #Verison Name Maker
         new_ver_name += old_ver[fin_idx:]
         return new_ver_name
     
+    # Generates display names for Zoom versions.
     def zoom_name_maker(old_ver):
         old_ver = old_ver
         if ' ' in old_ver:

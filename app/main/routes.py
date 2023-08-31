@@ -1,45 +1,48 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, jsonify
-from app.main.forms import RequestForm, AppVerForm
-from flask_login import current_user, login_required
-from app.models import User, App, Version
+from flask import render_template, request, jsonify
+from app.main.forms import AppVerForm
+from flask_login import login_required
+from app.models import App, Version
 from app.main.absolute_api import Abs_Actions
-from app.main.tool_box import Jsonizers, Dict_Builder, Data_fillers, Translators as Tlr
+from app.main.tool_box import Jsonizers, Dict_Builder, Translators as Tlr
 from app.main import bp
-import pandas as pd
 from bokeh.embed import server_document
 
-
-
+# Landing Page
 @bp.route('/')
 @bp.route('/index')
 @login_required
 def index():
     return render_template('index.html', title='Workbench')
 
+# Asset Checker Page
 @bp.route('/assets', methods=['GET', 'POST'])
 @login_required
 def assets():
     return render_template('assets.html', title='Assets')
 
+# Asset Checker Data
 @bp.route('/assets/data')
-def requests_data():
+def asset_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
     cortex_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Cortex')&select=deviceName, appName&pageSize=500&agentStatus=A")
     rapid_dict = Abs_Actions.abs_all_apps("filter=(appNameContains eq 'Rapid7')&select=deviceName, appName&pageSize=500&agentStatus=A")
     assets_dict = Dict_Builder.build_assets_dict(full_device_dict, cortex_dict, rapid_dict)
     return {'data': [Jsonizers.assets_json(key, value) for key, value in assets_dict.items()]}
 
+# Storage Checker Page
 @bp.route('/storage', methods=['GET', 'POST'])
 @login_required
 def storage():
     return render_template('storage.html', title='Storage')
 
+# Storage Checker Data
 @bp.route('/space/data')
 def space_data():
     full_device_dict = Abs_Actions.abs_all_devices("pageSize=500&agentStatus=A")
     space_dict = Dict_Builder.build_space_dict(full_device_dict)
     return {'data': [Jsonizers.space_json(key, value) for key, value in space_dict.items()]}
 
+# Version Checker Page
 @bp.route('/version_check', methods=['GET', 'POST'])
 @login_required
 def version_check():
@@ -59,6 +62,7 @@ def version_check():
         return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
     return render_template('version_check.html', title='Version Checker', appverforms=appverforms, filtered_version_dict=filtered_version_dict)
 
+# Version Checker Data
 @bp.route('/version_check/version/<app>')
 def version(app):
     versions = Version.query.filter_by(app_id=app).order_by(Version.fake_key.desc()).all()
@@ -70,6 +74,7 @@ def version(app):
         versionList.append(versionObj)
     return jsonify({'versions' : versionList})
 
+#Data Viz Page
 @bp.route('/graphs/', methods=['GET', 'POST'])
 @login_required
 def graphs():
