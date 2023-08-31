@@ -17,6 +17,7 @@ def index():
     return render_template('index.html', title='Workbench')
 
 @bp.route('/assets', methods=['GET', 'POST'])
+@login_required
 def assets():
     return render_template('assets.html', title='Assets')
 
